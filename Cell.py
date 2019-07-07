@@ -1,27 +1,21 @@
 from operator import itemgetter
+from CellGeometry import *
 
-class CellPrototype:
+class Cell:
     """Cell Prototype, used to build up cell structure. Finalized cells are handled by class 'CellFinal'"""
 
-    def __init__(self, serial_number, location, size, property_list, FEA_Data_transfer):    #refactor all FEA to data
+    def __init__(self, serial_number, location, size, ext_properties):
         self.__ID = serial_number
         self.__coordinates = location
         self.__dimensions = size
-        self.__properties = property_list
         self.__minmax_coordinates = []
-        self.__FEA_data = FEA_Data_transfer
+        self.__ext_properties = ext_properties
 
         for i in range(3):
-            min = self.__coordinates[i] - self.__dimensions[i]/2
-            max = self.__coordinates[i] + self.__dimensions[i]/2
+            min = self.__coordinates[i] - self.__dimensions[i] / 2
+            max = self.__coordinates[i] + self.__dimensions[i] / 2
             self.__minmax_coordinates.append([min, max])
 
-########################################################################################################################
-
-
-    def storeFEAData(self, FEA_data_transfer):
-        self.__FEA_data.append(FEA_data_transfer)
-        self.__FEA_data = sorted(self.__FEA_data, key=itemgetter(0))
 
 ########################################################################################################################
 
@@ -45,19 +39,19 @@ class CellPrototype:
 
 
     def getCoordinates(self):
-        return self.__coordinates
+        return self.__core_properties['pos']
 
 ########################################################################################################################
 
 
     def getDimensions(self):
-        return self.__dimensions
+        return self.__core_properties['dim']
 
 ########################################################################################################################
 
 
-    def getProperties(self):
-        return self.__properties
+    def getCoreProperties(self):
+        return self.__core_properties
 
 ########################################################################################################################
 
@@ -71,14 +65,6 @@ class CellPrototype:
     def isFinal(self):
         return False
 
-########################################################################################################################
-
-
-    def getData(self):
-        data_list = []
-        data_list.append(self.getID())
-        data_list.extend([self.getCoordinates(), self.getDimensions(), self.getProperties(), self.getMinMax(), self.getFEAData()])
-        return data_list
 
 
 
@@ -87,11 +73,11 @@ class CellPrototype:
 ########################################################################################################################
 
 
-class CellFinal(CellPrototype):
+class CellFinal(Cell):
     """Cell Prototype, used to build up cell structure. Finalized cells are handled by class Cell"""
 
-    def __init__(self, serial_number, location, size, property_list, FEA_Data_transfer):
-        super().__init__(serial_number, location, size, property_list, FEA_Data_transfer)
+    def __init__(self, serial_number, core_properties, ext_properties):
+        super().__init__(serial_number, core_properties, ext_properties)
 
 ########################################################################################################################
 
