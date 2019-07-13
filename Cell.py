@@ -39,20 +39,23 @@ class Cell:
                   [self.__minmax_coordinates[0][1], self.__minmax_coordinates[1][1], self.__minmax_coordinates[2][1]], \
                   [self.__minmax_coordinates[0][0], self.__minmax_coordinates[1][1], self.__minmax_coordinates[2][1]]]
 
+        #list of vertices
         self.__vertices = [Vertex(c_list[i], i) for i in range(8)]
 
+        #list of edges
         self.__edges = []
-        self.__edges.extend([Edge(self.__vertices[i1], self.__vertices[i2&3]) for i1 in range(4) for i2 in range(1, 5)])
-        self.__edges.extend([Edge(self.__vertices[i1], self.__vertices[i2]) for i1 in range(4) for i2 in range(4, 8)])
-        self.__edges.extend([Edge(self.__vertices[i1], self.__vertices[(i2|4) & 7]) for i1 in range(4, 8) for i2 in range(5,9)])
-        print(len(self.__edges))
-        for i in self.__edges:
-            verts= i.getVertices()
-            print(i.getLocation())
-            for i in verts:
-                print(i.getSerialNum())
-            print('\n')
+        self.__edges.extend([Edge(self.__vertices[i], self.__vertices[(i+1) & 3], i) for i in range(4)])
+        self.__edges.extend([Edge(self.__vertices[i], self.__vertices[i+4], i+4) for i in range(4)])
+        self.__edges.extend([Edge(self.__vertices[i], self.__vertices[((i+1) | 4) & 7], i+4) for i in range(4, 8)])
 
+        #list of faces
+        self.__faces = []
+        self.__faces.append(Face(self.__vertices[0], self.__vertices[1], self.__vertices[2], self.__vertices[3], 0))
+        self.__faces.extend([Face(self.__vertices[i], \
+                                  self.__vertices[(i+1) & 3], \
+                                  self.__vertices[((i+5) | 4) & 7], \
+                                  self.__vertices[i+4], i+1) for i in range(4)])
+        self.__faces.append(Face(self.__vertices[4], self.__vertices[5], self.__vertices[6], self.__vertices[7], 5))
 
 ########################################################################################################################
 

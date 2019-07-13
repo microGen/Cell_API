@@ -3,11 +3,15 @@ from operator import add, sub
 class Geometry:
     """Base geometry, single vertex"""
 
-    def __init__(self, location):
+    def __init__(self, location, geoID):
         self.__location = location
+        self.__geoID = geoID
 
     def getLocation(self):
         return self.__location
+
+    def getID(self):
+        return self.__geoID
 
 ########################################################################################################################
 ########################################################################################################################
@@ -16,9 +20,9 @@ class Geometry:
 class CompGeom(Geometry):
     """Complex, compound geometry, objects with multiple vertices"""
 
-    def __init__(self, verts, location):
+    def __init__(self, verts, location, geoID):
         self.__vertices = verts
-        super().__init__(location)
+        super().__init__(location, geoID)
 
     def getVertices(self):
         return self.__vertices
@@ -33,13 +37,9 @@ class CompGeom(Geometry):
 class Vertex(Geometry):
     """Single vertex representation"""
 
-    def __init__(self, vert0, snum):
-        super().__init__(vert0)
-        self.__location = vert0
-        self.__snum = snum
-
-    def getSerialNum(self):
-        return self.__snum
+    def __init__(self, coords, geoID):
+        self.__position = coords
+        super().__init__(self.__position, geoID)
 
 ########################################################################################################################
 ########################################################################################################################
@@ -48,9 +48,9 @@ class Vertex(Geometry):
 class Edge(CompGeom):
     """Edge representation, consists of 2 vertices"""
 
-    def __init__(self, vert0, vert1):
+    def __init__(self, vert0, vert1, geoID):
         position = [divisor / 2 for divisor in list(map(add, vert1.getLocation(), vert0.getLocation()))]
-        super().__init__([vert0, vert1], position)
+        super().__init__([vert0, vert1], position, geoID)
 
 ########################################################################################################################
 ########################################################################################################################
@@ -59,6 +59,6 @@ class Edge(CompGeom):
 class Face(CompGeom):
     """Quad face representation, consists of 4 vertices"""
 
-    def __init__(self, vert0, vert1, vert2, vert3):
+    def __init__(self, vert0, vert1, vert2, vert3, geoID):
         position = [divisor/2 for divisor in list(map(add, vert2.getLocation(), vert0.getLocation()))]
-        super().__init__([vert0, vert1, vert2, vert3], position)
+        super().__init__([vert0, vert1, vert2, vert3], position, geoID)
