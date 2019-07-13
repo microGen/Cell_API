@@ -1,5 +1,5 @@
 from operator import itemgetter
-from CellGeometry import *
+from CellGeometry import Vertex, Edge, Face
 
 class Cell:
     """Cell Prototype, used to build up cell structure. Finalized cells are handled by class 'CellFinal'"""
@@ -29,8 +29,29 @@ class Cell:
             face0:      v0, v1, v2, v3 |face1:      v0, v1, v4, v5 |face5:      v4, v5, v6, v7
         '''
 
-        self.__vertices =
+        #list of coordinates for cell vertices
+        c_list = [[self.__minmax_coordinates[0][0], self.__minmax_coordinates[1][0], self.__minmax_coordinates[2][0]], \
+                  [self.__minmax_coordinates[0][1], self.__minmax_coordinates[1][0], self.__minmax_coordinates[2][0]], \
+                  [self.__minmax_coordinates[0][1], self.__minmax_coordinates[1][1], self.__minmax_coordinates[2][0]], \
+                  [self.__minmax_coordinates[0][0], self.__minmax_coordinates[1][1], self.__minmax_coordinates[2][0]], \
+                  [self.__minmax_coordinates[0][0], self.__minmax_coordinates[1][0], self.__minmax_coordinates[2][1]], \
+                  [self.__minmax_coordinates[0][1], self.__minmax_coordinates[1][0], self.__minmax_coordinates[2][1]], \
+                  [self.__minmax_coordinates[0][1], self.__minmax_coordinates[1][1], self.__minmax_coordinates[2][1]], \
+                  [self.__minmax_coordinates[0][0], self.__minmax_coordinates[1][1], self.__minmax_coordinates[2][1]]]
 
+        self.__vertices = [Vertex(c_list[i], i) for i in range(8)]
+
+        self.__edges = []
+        self.__edges.extend([Edge(self.__vertices[i1], self.__vertices[i2&3]) for i1 in range(4) for i2 in range(1, 5)])
+        self.__edges.extend([Edge(self.__vertices[i1], self.__vertices[i2]) for i1 in range(4) for i2 in range(4, 8)])
+        self.__edges.extend([Edge(self.__vertices[i1], self.__vertices[(i2|4) & 7]) for i1 in range(4, 8) for i2 in range(5,9)])
+        print(len(self.__edges))
+        for i in self.__edges:
+            verts= i.getVertices()
+            print(i.getLocation())
+            for i in verts:
+                print(i.getSerialNum())
+            print('\n')
 
 
 ########################################################################################################################

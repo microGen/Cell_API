@@ -33,9 +33,13 @@ class CompGeom(Geometry):
 class Vertex(Geometry):
     """Single vertex representation"""
 
-    def __init__(self, vert0):
+    def __init__(self, vert0, snum):
         super().__init__(vert0)
         self.__location = vert0
+        self.__snum = snum
+
+    def getSerialNum(self):
+        return self.__snum
 
 ########################################################################################################################
 ########################################################################################################################
