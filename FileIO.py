@@ -8,6 +8,9 @@ class FileIO:
         except:
             print('File name or mode invalid.')
 
+    ####################################################################################################################
+
+
     def changeFile(self, filename, mode):
         try:
             self.io_file.close();

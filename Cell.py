@@ -10,6 +10,7 @@ class Cell:
         self.__dimensions = size
         self.__minmax_coordinates = []
         self.__ext_properties = ext_properties
+        self.__final = False
 
         for i in range(3):
             min = self.__coordinates[i] - self.__dimensions[i] / 2
@@ -57,53 +58,119 @@ class Cell:
                                   self.__vertices[i+4], i+1) for i in range(4)])
         self.__faces.append(Face(self.__vertices[4], self.__vertices[5], self.__vertices[6], self.__vertices[7], 5))
 
-########################################################################################################################
+    ####################################################################################################################
 
 
     def splitCell(self):
         pass
 
-########################################################################################################################
+    ####################################################################################################################
 
 
     def getID(self):
         return self.__ID
 
-########################################################################################################################
+    ####################################################################################################################
 
 
     def getCoordinates(self):
-        return self.__core_properties['pos']
+        return self.__coordinates
 
-########################################################################################################################
+    ####################################################################################################################
 
 
     def getDimensions(self):
-        return self.__core_properties['dim']
+        return self.__dimensions
 
-########################################################################################################################
-
-
-    def getCoreProperties(self):
-        return self.__core_properties
-
-########################################################################################################################
-
-
-    def getExtProperties(self):
-        return self.__core_properties
-
-########################################################################################################################
+    ####################################################################################################################
 
 
     def getMinMax(self):
         return self.__minmax_coordinates
 
-########################################################################################################################
+    ####################################################################################################################
+
+    def getVertices(self, *vertexID):
+        if vertexID == ():
+            return self.__vertices
+        else:
+            vertexID = vertexID[0]
+            if type(vertexID) == int:
+                return self.__vertices[vertexID]
+            else:
+                ret_vertices = []
+                for i in vertexID:
+                    ret_vertices.append(self.__vertices[i])
+                return ret_vertices
+
+    ####################################################################################################################
+
+
+    def getEdges(self, *edgeID):
+        if edgeID == ():
+            return self.__edges
+        else:
+            edgeID = edgeID[0]
+            if type(edgeID) == int:
+                return self.__edges[edgeID]
+            else:
+                ret_edges = []
+                for i in edgeID:
+                    ret_edges.append(self.__edges[i])
+                return ret_edges
+
+    ####################################################################################################################
+
+
+    def getFaces(self, *faceID):
+        if faceID == ():
+            return self.__faces
+        else:
+            faceID = faceID[0]
+            if type(faceID) == int:
+                return self.__faces[faceID]
+            else:
+                ret_faces = []
+                for i in faceID:
+                    ret_faces.append(self.__faces[i])
+                return ret_faces
+
+    ####################################################################################################################
+
+
+    def getVolume(self):
+        edge0 = self.__edges[0]
+        edge1 = self.__edges[1]
+        edge2 = self.__edges[2]
+        return edge0.getLength() * edge1.getLength() * edge2.getLength()
+
+    ####################################################################################################################
+
+
+    def getCoreProperties(self):
+        core_properties = {'Location' : self.getCoordinates(), \
+                           'Dimensions' : self.getDimensions(), \
+                           'Volume' : self.getVolume()}
+        return core_properties
+
+    ####################################################################################################################
+
+
+    def getExtProperties(self):
+        return self.__ext_properties
+
+    ####################################################################################################################
+
+
+    def setFinal(self):
+        if not self.__final:
+            self.__final = True
+
+    ####################################################################################################################
 
 
     def isFinal(self):
-        return False
+        return self.__final
 
 
 
@@ -118,7 +185,7 @@ class CellFinal(Cell):
     def __init__(self, serial_number, core_properties, ext_properties):
         super().__init__(serial_number, core_properties, ext_properties)
 
-########################################################################################################################
+    ####################################################################################################################
 
 
     def generateVectors(self):

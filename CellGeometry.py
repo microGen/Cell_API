@@ -8,8 +8,14 @@ class Geometry:
         self.__location = location
         self.__geometry_ID = geometry_ID
 
+    ####################################################################################################################
+
+
     def getLocation(self):
         return self.__location
+
+    ####################################################################################################################
+
 
     def getID(self):
         return self.__geometry_ID
@@ -25,8 +31,14 @@ class CompGeom(Geometry):
         self.__vertices = verts
         super().__init__(location, geometry_ID)
 
+    ####################################################################################################################
+
+
     def getVertices(self):
         return self.__vertices
+
+    ####################################################################################################################
+
 
     def getVertexLocations(self):
         return [i.getLocation() for i in self.__vertices]
@@ -55,6 +67,9 @@ class Edge(CompGeom):
         position = [divisor / 2 for divisor in list(map(add, vert1.getLocation(), vert0.getLocation()))]
         super().__init__([self.__vert0, self.__vert1], position, geometry_ID)
 
+
+    ####################################################################################################################
+
     def getLength(self):
         v0_loc = self.__vert0.getLocation()
         v1_loc = self.__vert1.getLocation()
@@ -79,8 +94,14 @@ class Face(CompGeom):
         position = [divisor/2 for divisor in list(map(add, vert2.getLocation(), vert0.getLocation()))]
         super().__init__([self.__vert0, self.__vert1, self.__vert2, self.__vert3], position, geometry_ID)
 
+    ####################################################################################################################
+
+
     def getEdgeLengths(self):
         return [self.__edge0.getLength(), self.__edge1.getLength()]#
+
+    ####################################################################################################################
+
 
     def getArea(self):
         return self.__edge0.getLength() * self.__edge1.getLength()
