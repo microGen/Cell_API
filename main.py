@@ -23,3 +23,22 @@ print(c.getVertices(1), '\n')
 print(c.getVertices([0,2,3]), '\n')
 print(c.getEdges(), '\n')
 print(c.getFaces(), '\n')
+
+class test1:
+    def __init__(self, indata):
+        self.__indata = indata
+
+    def murks(self):
+        for i in range(len(self.__indata)):
+            self.__indata[i] + 1
+
+    def hurks(self, indata2):
+        for i in range(len(indata2)):
+            indata2[i]+1
+
+a = [1, 2, 3]
+t = test1(a)
+t.murks()
+print(a)
+t.hurks(a)
+print(a)
