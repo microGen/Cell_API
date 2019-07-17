@@ -4,17 +4,17 @@ from CellGeometry import Vertex, Edge, Face
 class Cell:
     """Cell Prototype, used to build up cell structure. Finalized cells are handled by class 'CellFinal'"""
 
-    def __init__(self, serial_number, location, size, ext_properties):
+    def __init__(self, serial_number, location, dimensions, ext_properties):
         self.__ID = serial_number
-        self.__coordinates = location
-        self.__dimensions = size
+        self.__location = location
+        self.__dimensions = dimensions
         self.__minmax_coordinates = []
         self.__ext_properties = ext_properties
         self.__final = False
 
         for i in range(3):
-            min = self.__coordinates[i] - self.__dimensions[i] / 2
-            max = self.__coordinates[i] + self.__dimensions[i] / 2
+            min = self.__location[i] - self.__dimensions[i] / 2
+            max = self.__location[i] + self.__dimensions[i] / 2
             self.__minmax_coordinates.append([min, max])
 
         '''
@@ -67,30 +67,30 @@ class Cell:
     ####################################################################################################################
 
 
-    def getID(self):
+    def ID(self):
         return self.__ID
 
     ####################################################################################################################
 
 
-    def getCoordinates(self):
-        return self.__coordinates
+    def location(self):
+        return self.__location
 
     ####################################################################################################################
 
 
-    def getDimensions(self):
+    def dimensions(self):
         return self.__dimensions
 
     ####################################################################################################################
 
 
-    def getMinMax(self):
+    def ####################################################################################################################(self):
         return self.__minmax_coordinates
 
     ####################################################################################################################
 
-    def getVertices(self, *vertexID):
+    def vertices(self, *vertexID):
         if vertexID == ():
             return self.__vertices
         else:
@@ -106,7 +106,7 @@ class Cell:
     ####################################################################################################################
 
 
-    def getEdges(self, *edgeID):
+    def edges(self, *edgeID):
         if edgeID == ():
             return self.__edges
         else:
@@ -122,7 +122,7 @@ class Cell:
     ####################################################################################################################
 
 
-    def getFaces(self, *faceID):
+    def faces(self, *faceID):
         if faceID == ():
             return self.__faces
         else:
@@ -138,7 +138,7 @@ class Cell:
     ####################################################################################################################
 
 
-    def getVolume(self):
+    def volume(self):
         edge0 = self.__edges[0]
         edge1 = self.__edges[1]
         edge2 = self.__edges[2]
@@ -147,16 +147,16 @@ class Cell:
     ####################################################################################################################
 
 
-    def getCoreProperties(self):
-        core_properties = {'Location' : self.getCoordinates(), \
-                           'Dimensions' : self.getDimensions(), \
-                           'Volume' : self.getVolume()}
+    def coreProperties(self):
+        core_properties = {'Location' : self.location(), \
+                           'Dimensions' : self.dimensions(), \
+                           'Volume' : self.volume()}
         return core_properties
 
     ####################################################################################################################
 
 
-    def getExtProperties(self):
+    def extProperties(self):
         return self.__ext_properties
 
     ####################################################################################################################

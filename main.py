@@ -10,19 +10,19 @@ dim = [2, 2, 2]
 
 c = Cell(3, loc, dim, {})
 print('Cell data:')
-print('ID:\t\t\t', c.getID())
-print('Pos:\t\t', c.getCoordinates())
-print('Dims:\t\t', c.getDimensions())
-print('MinMax:\t\t', c.getMinMax())
-print('Volume:\t\t', c.getVolume())
-print('CoreProps:\t', c.getCoreProperties())
-print('ExtProps:\t', c.getExtProperties())
+print('ID:\t\t\t', c.ID())
+print('Pos:\t\t', c.location())
+print('Dims:\t\t', c.dimensions())
+print('MinMax:\t\t', c.minmax())
+print('Volume:\t\t', c.volume())
+print('CoreProps:\t', c.coreProperties())
+print('ExtProps:\t', c.extProperties())
 
-print(c.getVertices(), '\n')
-print(c.getVertices(1), '\n')
-print(c.getVertices([0,2,3]), '\n')
-print(c.getEdges(), '\n')
-print(c.getFaces(), '\n')
+print(c.vertices(), '\n')
+print(c.vertices(1), '\n')
+print(c.vertices([0, 2, 3]), '\n')
+print(c.edges(), '\n')
+print(c.faces(), '\n')
 
 class test1:
     def __init__(self, indata):
