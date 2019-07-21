@@ -3,16 +3,33 @@ from math import inf, sqrt
 import json
 
 class Container:
-    def __init__(self, filename):
-        self.__infile = open(filename, 'r')
-        self.__grid = json.load(self.__infile)
-        self.__grid_length = len(self.__grid)
+    def __init__(self, *filename):
+
+        if filename != ():
+            self.__infile = open(filename[0], 'r')
+            self.__grid = json.load(self.__infile)
+            self.__grid_length = len(self.__grid)
+        else:
+            self.__infile = None
+            self.__grid = None
+            self.__grid_length = None
 
     ####################################################################################################################
 
 
     def __del__(self):
         self.__infile.close()
+
+
+    ####################################################################################################################
+
+    def loadFile(self, filename):
+        if self.__infile:
+            self.__infile.close()
+        self.__infile = open(filename, 'r')
+        self.__grid = json.load(self.__infile)
+        self.__grid_length = len(self.__grid)
+
 
     ####################################################################################################################
 

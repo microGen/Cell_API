@@ -182,8 +182,8 @@ class Cell:
 class CellFinal(Cell):
     """Cell Prototype, used to build up cell structure. Finalized cells are handled by class Cell"""
 
-    def __init__(self, serial_number, core_properties, ext_properties):
-        super().__init__(serial_number, core_properties, ext_properties)
+    def __init__(self, serial_number, location, dimensions, ext_properties):
+        super().__init__(serial_number, location, dimensions, ext_properties)
 
     ####################################################################################################################
 

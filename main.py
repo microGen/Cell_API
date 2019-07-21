@@ -1,9 +1,5 @@
-from Cell import Cell, CellFinal
-from Container import Container
-from CellGeometry import *
-from Arbiter import Arbiter
-from FileIO import FileIO
-import json
+import Factories
+
 debug_cell = False
 debug_json = True
 
@@ -12,8 +8,12 @@ print('Hello World, this is the testing stage for the cell structure as of now')
 loc = [1, 1, 1]
 dim = [2, 2, 2]
 
-c = Cell(3, loc, dim, {})
-cont = Container("json_test_input.txt")
+c = Factories.cellFactory(3, loc, dim, {}, False)
+#cont = Container("json_test_input.txt")
+#cont = Container()
+#cont.loadFile("json_test_input.txt")
+cont = Factories.containerFactory("json_test_input.txt")
+cont.loadFile("json_test_input.txt")
 
 if debug_cell:
     print('Cell data:')
