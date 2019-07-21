@@ -1,7 +1,8 @@
 import Factories
+from FileIO import FileIO
 
 debug_cell = False
-debug_json = True
+debug_json = False
 
 print('Hello World, this is the testing stage for the cell structure as of now')
 
@@ -9,11 +10,7 @@ loc = [1, 1, 1]
 dim = [2, 2, 2]
 
 c = Factories.cellFactory(3, loc, dim, {}, False)
-#cont = Container("json_test_input.txt")
-#cont = Container()
-#cont.loadFile("json_test_input.txt")
 cont = Factories.containerFactory("json_test_input.txt")
-cont.loadFile("json_test_input.txt")
 
 if debug_cell:
     print('Cell data:')
@@ -38,21 +35,8 @@ if debug_json:
     print(cont.getData([[4, 5], [4, 5], [4, 5]]))
     print('Data fields:\t\t', cont.lengthOfData())
 
-# class test1:
-#     def __init__(self, indata):
-#         self.__indata = indata
-#
-#     def murks(self):
-#         for i in range(len(self.__indata)):
-#             self.__indata[i] + 1
-#
-#     def hurks(self, indata2):
-#         for i in range(len(indata2)):
-#             indata2[i]+1
-#
-# a = [1, 2, 3]
-# t = test1(a)
-# t.murks()
-# print(a)
-# t.hurks(a)
-# print(a)
+fio = FileIO("json_test_input.txt", 'r')
+print(fio.dumpData())
+fio.closeFile()
+fio.loadFile("testfile.txt", 'r')
+print(fio.dumpData())
