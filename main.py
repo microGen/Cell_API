@@ -1,10 +1,13 @@
 import Factories
 from FileIO import FileIO
+import Testing
 
 debug_cell = False
 debug_json = False
 
 print('Hello World, this is the testing stage for the cell structure as of now')
+
+Testing.cell_unit_test()
 
 loc = [1, 1, 1]
 dim = [2, 2, 2]
@@ -34,9 +37,3 @@ if debug_json:
     print(cont.getEnclosedData([[4, 5], [4, 5], [4, 5]]))
     print(cont.getData([[4, 5], [4, 5], [4, 5]]))
     print('Data fields:\t\t', cont.lengthOfData())
-
-fio = FileIO("json_test_input.txt", 'r')
-print(fio.dumpData())
-fio.closeFile()
-fio.loadFile("testfile.txt", 'r')
-print(fio.dumpData())
