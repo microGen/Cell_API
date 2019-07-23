@@ -3,11 +3,12 @@ from FileIO import FileIO
 import Testing
 
 debug_cell = False
-debug_json = False
+debug_json = True
 
 print('Hello World, this is the testing stage for the cell structure as of now')
 
 Testing.cell_unit_test()
+Testing.container_unit_test()
 
 loc = [1, 1, 1]
 dim = [2, 2, 2]
@@ -31,9 +32,8 @@ if debug_cell:
     print(c.faces(), '\n')
 
 if debug_json:
-    print('Input Data:')
-    print(cont.dumpData())
-    print(cont.getNearestData([-432432, -42343242, 4234324]))
-    print(cont.getEnclosedData([[4, 5], [4, 5], [4, 5]]))
-    print(cont.getData([[4, 5], [4, 5], [4, 5]]))
+    print('Input Data:\t\t\t', cont.dumpData())
+    print('Nearest Data:\t\t', cont.getNearestData([-432432, -42343242, 4234324]))
+    print('Enclosed Data:\t\t', cont.getEnclosedData([[4, 5], [4, 5], [4, 5]]))
+    print('All Data:\t\t\t', cont.getData([[4, 5], [4, 5], [4, 5]]))
     print('Data fields:\t\t', cont.lengthOfData())

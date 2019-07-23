@@ -28,6 +28,7 @@ def cell_unit_test():
     assert cell_test.minmax() == cell_test_minmax, "Cell min/max coordinates assertion failed"
     for i in range(8):
         assert type(cell_test.vertices()[i]) is CellGeometry.Vertex, "Cell vertex type assertion failed"
+        #assert location of individual vertices
     for i in range(12):
         assert type(cell_test.edges()[i]) is CellGeometry.Edge, "Cell edge type assertion failed"
     for i in range(6):
@@ -39,6 +40,7 @@ def cell_unit_test():
     assert cell_test.isFinal() == False, "Cell state assertion 1 failed: final state reached unexpectedly"
     cell_test.setFinal()
     assert cell_test.isFinal() == True, "Cell state assertion 2 failed: final state not reached"
+
     print('Unit test passed: class Cell')
 
 
@@ -47,5 +49,21 @@ def cell_unit_test():
 def container_unit_test():
     """Unit tests for all methods of container"""
 
-    container_testfile = "unit_testfile.txt"
+    container_testfile = "unit_testfile.json"
     container_test = Container(container_testfile)
+    assert container_test.getNearestData([0, 0, 0]) == {'Location': [0, 0, 0], 'Density': 1}, \
+        "Assert getting nearest data succesful failed"
+    assert container_test.getNearestData([5, 5, 5]) == {'Location': [4, 5, 4], 'Density': 5}, \
+        "Assert getting nearest data unsuccesful failed"
+    assert container_test.getEnclosedData([[1, 4], [1, 4], [1, 4]]) == [{'Location': [1, 1, 1], 'Density': 2},\
+                                                                        {'Location': [3, 4, 2], 'Density': 3.14159}], \
+        "Assert getting contained data succesful failed"
+    assert container_test.getEnclosedData([[6, 6], [6, 6], [6, 6]]) == [], \
+        "Assert getting enclosed data unsuccesful failed"
+    assert container_test.lengthOfData() == 4, \
+        "Assert input data length failed"
+    container_test.loadFile("unit_testfile2.json")
+    assert container_test.lengthOfData() == 1, \
+        "Assert input data length after loading different file failed"
+
+    print('Unit test passed: class Container')
