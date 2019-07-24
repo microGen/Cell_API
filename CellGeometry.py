@@ -1,4 +1,4 @@
-from operator import add, sub
+from operator import add
 from math import sqrt
 
 class Geometry:

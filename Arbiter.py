@@ -12,9 +12,9 @@ class Arbiter:
         return_coordinates = []
 
         for i in range(3):
-            min = coordinates[i] - dimensions[i] / 2
-            max = coordinates[i] + dimensions[i] / 2
-            return_coordinates.append([min, max])
+            min_coords = coordinates[i] - dimensions[i] / 2
+            max_coords = coordinates[i] + dimensions[i] / 2
+            return_coordinates.append([min_coords, max_coords])
 
         return return_coordinates
 

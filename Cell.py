@@ -13,9 +13,9 @@ class Cell:
         self.__final = False
 
         for i in range(3):
-            min = self.__location[i] - self.__dimensions[i] / 2
-            max = self.__location[i] + self.__dimensions[i] / 2
-            self.__minmax_coordinates.append([min, max])
+            min_location = self.__location[i] - self.__dimensions[i] / 2
+            max_location = self.__location[i] + self.__dimensions[i] / 2
+            self.__minmax_coordinates.append([min_location, max_location])
 
         '''
         local coordinate system:

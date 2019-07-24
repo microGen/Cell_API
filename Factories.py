@@ -6,11 +6,11 @@ def cellFactory(serial_number, location, dimensions, ext_properties, state):
     """Decides between returning a prototype cell or a final cell"""
 
     if not state:
-        cell_Instance = Cell(serial_number, location, dimensions, ext_properties)
+        cell_instance = Cell(serial_number, location, dimensions, ext_properties)
     else:
-        cell_Instance = CellFinal(serial_number, location, dimensions, ext_properties)
+        cell_instance = CellFinal(serial_number, location, dimensions, ext_properties)
 
-    return cell_Instance
+    return cell_instance
 
 def containerFactory(*args):
     """Returns a container object."""

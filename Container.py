@@ -45,7 +45,7 @@ class Container:
             str_i = str(i)
             eucl_dist = sqrt(sum([(a - b) ** 2 for a, b in zip(coordinates, self.__grid[str_i]["Location"])]))
 
-            if (eucl_dist < eucl_dist_prev):
+            if eucl_dist < eucl_dist_prev:
                 data_index = str_i
             eucl_dist_prev = min(eucl_dist, eucl_dist_prev)
 
