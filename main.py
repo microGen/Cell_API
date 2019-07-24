@@ -9,6 +9,7 @@ print('Hello World, this is the testing stage for the cell structure as of now')
 
 Testing.cell_unit_test()
 Testing.container_unit_test()
+Testing.prop_calc_unit_test()
 
 loc = [1, 1, 1]
 dim = [2, 2, 2]
@@ -37,3 +38,4 @@ if debug_json:
     print('Enclosed Data:\t\t', cont.getEnclosedData([[4, 5], [4, 5], [4, 5]]))
     print('All Data:\t\t\t', cont.getData([[4, 5], [4, 5], [4, 5]]))
     print('Data fields:\t\t', cont.lengthOfData())
+

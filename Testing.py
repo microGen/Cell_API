@@ -1,7 +1,14 @@
+"""Unit Tests"""
+
+#Classes
 from Cell import Cell, CellFinal
 import CellGeometry
 from Container import Container
 from Arbiter import Arbiter
+
+#Functions
+import ExtPropCalc
+
 
 def cell_unit_test():
     """Unit test for all class methods of Cell"""
@@ -43,8 +50,8 @@ def cell_unit_test():
 
     print('Unit test passed: class Cell')
 
-
     ####################################################################################################################
+
 
 def container_unit_test():
     """Unit tests for all methods of container"""
@@ -67,3 +74,13 @@ def container_unit_test():
         "Assert input data length after loading different file failed"
 
     print('Unit test passed: class Container')
+
+    ####################################################################################################################
+
+
+def prop_calc_unit_test():
+    """Unit tests for external properties calculators"""
+    sigma = 0.01
+    test_density = 6.17008
+    assert (test_density - sigma * test_density) <= ExtPropCalc.cellDensity([10, 10, 10], 2, 0.00787)\
+           <= (test_density + sigma * test_density), "Assert cell density calculation failed"
