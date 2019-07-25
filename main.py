@@ -10,14 +10,14 @@ debug_rules = True
 
 print('Testing stage for Cell API\n')
 
-Testing.cell_unit_test()
+#Testing.cell_unit_test()
 Testing.container_unit_test()
 Testing.prop_calc_unit_test()
 
 loc = [1, 1, 1]
 dim = [2, 2, 2]
 
-c = Factories.cellFactory(3, loc, dim, {'Density': 0.00787}, False)
+c = Factories.cellFactory(3, loc, dim, {'density': 0.00787}, False)
 cont = Factories.containerFactory("json_test_input.txt")
 
 print('\n\n--- EXPERIMENTAL AREA ---\n')
@@ -45,9 +45,10 @@ if debug_json:
     print('Data fields:\t\t', cont.lengthOfData())
 
 if debug_rules:
-    dens = ExtPropCalc.cellDensity(c.dimensions(), 0.2, c.properties('Density'))
+    print(c.properties('dimensions'))
+    dens = ExtPropCalc.cellDensity(c.properties('dimensions'), 0.2, c.properties('density'))
     print('Nearest Data:\t\t', cont.getNearestData([-432432, -42343242, 4234324]))
     print(dens)
-    tr = Rulebook.Density('Density')
+    tr = Rulebook.Density('density')
     print(tr.getProp())
     print(tr.apply_min(cont.getNearestData([-432432, -42343242, 4234324]), dens))

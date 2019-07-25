@@ -5,17 +5,16 @@ class Cell:
     """Cell Prototype, used to build up cell structure. Finalized cells are handled by class 'CellFinal'"""
 
     def __init__(self, serial_number, location, dimensions, ext_properties):
+        self.__properties = {'location': location, 'dimensions': dimensions, 'minmax': []}
+        self.__properties.update(ext_properties)
+
         self.__ID = serial_number
-        self.__location = location
-        self.__dimensions = dimensions
-        self.__minmax_coordinates = []
-        self.__ext_properties = ext_properties
         self.__final = False
 
         for i in range(3):
-            min_location = self.__location[i] - self.__dimensions[i] / 2
-            max_location = self.__location[i] + self.__dimensions[i] / 2
-            self.__minmax_coordinates.append([min_location, max_location])
+            min_location = self.__properties['location'][i] - self.__properties['dimensions'][i] / 2
+            max_location = self.__properties['location'][i] + self.__properties['dimensions'][i] / 2
+            self.__properties['minmax'].append([min_location, max_location])
 
         '''
         local coordinate system:
@@ -31,14 +30,14 @@ class Cell:
         '''
 
         #list of coordinates for cell vertices
-        c_list = [[self.__minmax_coordinates[0][0], self.__minmax_coordinates[1][0], self.__minmax_coordinates[2][0]], \
-                  [self.__minmax_coordinates[0][1], self.__minmax_coordinates[1][0], self.__minmax_coordinates[2][0]], \
-                  [self.__minmax_coordinates[0][1], self.__minmax_coordinates[1][1], self.__minmax_coordinates[2][0]], \
-                  [self.__minmax_coordinates[0][0], self.__minmax_coordinates[1][1], self.__minmax_coordinates[2][0]], \
-                  [self.__minmax_coordinates[0][0], self.__minmax_coordinates[1][0], self.__minmax_coordinates[2][1]], \
-                  [self.__minmax_coordinates[0][1], self.__minmax_coordinates[1][0], self.__minmax_coordinates[2][1]], \
-                  [self.__minmax_coordinates[0][1], self.__minmax_coordinates[1][1], self.__minmax_coordinates[2][1]], \
-                  [self.__minmax_coordinates[0][0], self.__minmax_coordinates[1][1], self.__minmax_coordinates[2][1]]]
+        c_list = [[self.__properties['minmax'][0][0], self.__properties['minmax'][1][0], self.__properties['minmax'][2][0]], \
+                  [self.__properties['minmax'][0][1], self.__properties['minmax'][1][0], self.__properties['minmax'][2][0]], \
+                  [self.__properties['minmax'][0][1], self.__properties['minmax'][1][1], self.__properties['minmax'][2][0]], \
+                  [self.__properties['minmax'][0][0], self.__properties['minmax'][1][1], self.__properties['minmax'][2][0]], \
+                  [self.__properties['minmax'][0][0], self.__properties['minmax'][1][0], self.__properties['minmax'][2][1]], \
+                  [self.__properties['minmax'][0][1], self.__properties['minmax'][1][0], self.__properties['minmax'][2][1]], \
+                  [self.__properties['minmax'][0][1], self.__properties['minmax'][1][1], self.__properties['minmax'][2][1]], \
+                  [self.__properties['minmax'][0][0], self.__properties['minmax'][1][1], self.__properties['minmax'][2][1]]]
 
         #list of vertices
         self.__vertices = [Vertex(c_list[i], i) for i in range(8)]
@@ -69,24 +68,6 @@ class Cell:
 
     def ID(self):
         return self.__ID
-
-    ####################################################################################################################
-
-
-    def location(self):
-        return self.__location
-
-    ####################################################################################################################
-
-
-    def dimensions(self):
-        return self.__dimensions
-
-    ####################################################################################################################
-
-
-    def minmax(self):
-        return self.__minmax_coordinates
 
     ####################################################################################################################
 
@@ -147,54 +128,17 @@ class Cell:
     ####################################################################################################################
 
 
-    def coreProperties(self, *key):
-        core_properties = {'Location': self.location(), \
-                           'Dimensions': self.dimensions(), \
-                           'Volume': self.volume()}
-        if not key:
-            return core_properties
-        else:
-            core_prop_select = []
-            for i in key:
-                if i in core_properties:
-                    core_prop_select.append(core_properties[i])
-            return core_prop_select
-
-    ####################################################################################################################
-
-
-    def extProperties(self, *key):
-        if not key:
-            return self.__ext_properties
-        elif len(key) > 1:
-            ext_prop_select = []
-            for i in key:
-                print(i)
-                if i in self.__ext_properties:
-                    ext_prop_select.append(self.__ext_properties[i])
-            return ext_prop_select
-        else:
-            return self.__ext_properties[key[0]]
-
-    ####################################################################################################################
-
-
     def properties(self, *key):
-        props = {}
         if not key:
-            props = self.coreProperties()
-            props.update(self.extProperties())
-            return props
+            return self.__properties
         else:
-            for i in key:
-                if 'Location' in i or 'Dimensions' in i or 'Volume' in i:
-                    props.update(self.coreProperties(i))
-                else:
-                    props.update(self.extProperties(i))
             if len(key) > 1:
+                props = []
+                for i in key:
+                    props.append(self.__properties[i])
                 return props
             else:
-                return props[0]
+                return self.__properties[key[0]]
 
     ####################################################################################################################
 

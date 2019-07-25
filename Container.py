@@ -43,7 +43,7 @@ class Container:
 
         for i in range(self.__grid_length):
             str_i = str(i)
-            eucl_dist = sqrt(sum([(a - b) ** 2 for a, b in zip(coordinates, self.__grid[str_i]["Location"])]))
+            eucl_dist = sqrt(sum([(a - b) ** 2 for a, b in zip(coordinates, self.__grid[str_i]["location"])]))
 
             if eucl_dist < eucl_dist_prev:
                 data_index = str_i
@@ -71,9 +71,9 @@ class Container:
 
         for i in range(self.__grid_length):
             str_i = str(i)
-            if x_min <= self.__grid[str_i]['Location'][x] <= x_max and \
-                                    y_min <= self.__grid[str_i]["Location"][y] <= y_max and \
-                                    z_min <= self.__grid[str_i]["Location"][z] <= z_max:
+            if x_min <= self.__grid[str_i]['location'][x] <= x_max and \
+                                    y_min <= self.__grid[str_i]["location"][y] <= y_max and \
+                                    z_min <= self.__grid[str_i]["location"][z] <= z_max:
                 data_list.append(self.__grid[str_i])
 
         return data_list
