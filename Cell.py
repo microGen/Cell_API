@@ -147,27 +147,54 @@ class Cell:
     ####################################################################################################################
 
 
-    def coreProperties(self):
-        ### implement key driven return values
-        core_properties = {'Location' : self.location(), \
-                           'Dimensions' : self.dimensions(), \
-                           'Volume' : self.volume()}
-        return core_properties
+    def coreProperties(self, *key):
+        core_properties = {'Location': self.location(), \
+                           'Dimensions': self.dimensions(), \
+                           'Volume': self.volume()}
+        if not key:
+            return core_properties
+        else:
+            core_prop_select = []
+            for i in key:
+                if i in core_properties:
+                    core_prop_select.append(core_properties[i])
+            return core_prop_select
 
     ####################################################################################################################
 
 
-    def extProperties(self):
-        #### implement key driven return value
-        return self.__ext_properties
+    def extProperties(self, *key):
+        if not key:
+            return self.__ext_properties
+        elif len(key) > 1:
+            ext_prop_select = []
+            for i in key:
+                print(i)
+                if i in self.__ext_properties:
+                    ext_prop_select.append(self.__ext_properties[i])
+            return ext_prop_select
+        else:
+            return self.__ext_properties[key[0]]
 
     ####################################################################################################################
 
 
-    def properties(self):
-        props = self.coreProperties()
-        props.update(self.extProperties())
-        return props
+    def properties(self, *key):
+        props = {}
+        if not key:
+            props = self.coreProperties()
+            props.update(self.extProperties())
+            return props
+        else:
+            for i in key:
+                if 'Location' in i or 'Dimensions' in i or 'Volume' in i:
+                    props.update(self.coreProperties(i))
+                else:
+                    props.update(self.extProperties(i))
+            if len(key) > 1:
+                return props
+            else:
+                return props[0]
 
     ####################################################################################################################
 

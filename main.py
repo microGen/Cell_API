@@ -45,7 +45,7 @@ if debug_json:
     print('Data fields:\t\t', cont.lengthOfData())
 
 if debug_rules:
-    dens = ExtPropCalc.cellDensity(c.dimensions(), 0.2, c.extProperties()['Density'])
+    dens = ExtPropCalc.cellDensity(c.dimensions(), 0.2, c.properties('Density'))
     print('Nearest Data:\t\t', cont.getNearestData([-432432, -42343242, 4234324]))
     print(dens)
     tr = Rulebook.Density('Density')
