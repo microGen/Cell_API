@@ -1,11 +1,14 @@
 import Factories
 from FileIO import FileIO
 import Testing
+import Rulebook
+import ExtPropCalc
 
 debug_cell = False
-debug_json = True
+debug_json = False
+debug_rules = True
 
-print('Hello World, this is the testing stage for the cell structure as of now')
+print('Testing stage for Cell API\n')
 
 Testing.cell_unit_test()
 Testing.container_unit_test()
@@ -14,8 +17,10 @@ Testing.prop_calc_unit_test()
 loc = [1, 1, 1]
 dim = [2, 2, 2]
 
-c = Factories.cellFactory(3, loc, dim, {}, False)
+c = Factories.cellFactory(3, loc, dim, {'Density': 0.00787}, False)
 cont = Factories.containerFactory("json_test_input.txt")
+
+print('\n\n--- EXPERIMENTAL AREA ---\n')
 
 if debug_cell:
     print('Cell data:')
@@ -39,3 +44,10 @@ if debug_json:
     print('All Data:\t\t\t', cont.getData([[4, 5], [4, 5], [4, 5]]))
     print('Data fields:\t\t', cont.lengthOfData())
 
+if debug_rules:
+    dens = ExtPropCalc.cellDensity(c.dimensions(), 0.2, c.extProperties()['Density'])
+    print('Nearest Data:\t\t', cont.getNearestData([-432432, -42343242, 4234324]))
+    print(dens)
+    tr = Rulebook.Density('Density')
+    print(tr.getProp())
+    print(tr.apply_min(cont.getNearestData([-432432, -42343242, 4234324]), dens))

@@ -148,6 +148,7 @@ class Cell:
 
 
     def coreProperties(self):
+        ### implement key driven return values
         core_properties = {'Location' : self.location(), \
                            'Dimensions' : self.dimensions(), \
                            'Volume' : self.volume()}
@@ -157,10 +158,18 @@ class Cell:
 
 
     def extProperties(self):
+        #### implement key driven return value
         return self.__ext_properties
 
     ####################################################################################################################
 
+
+    def properties(self):
+        props = self.coreProperties()
+        props.update(self.extProperties())
+        return props
+
+    ####################################################################################################################
 
     def setFinal(self):
         if not self.__final:

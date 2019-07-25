@@ -59,14 +59,14 @@ def container_unit_test():
     container_testfile = "unit_testfile.json"
     container_test = Container(container_testfile)
     assert container_test.getNearestData([0, 0, 0]) == {'Location': [0, 0, 0], 'Density': 1}, \
-        "Assert getting nearest data succesful failed"
+        "Assert getting nearest data successful failed"
     assert container_test.getNearestData([5, 5, 5]) == {'Location': [4, 5, 4], 'Density': 5}, \
-        "Assert getting nearest data unsuccesful failed"
+        "Assert getting nearest data unsuccessful failed"
     assert container_test.getEnclosedData([[1, 4], [1, 4], [1, 4]]) == [{'Location': [1, 1, 1], 'Density': 2},\
                                                                         {'Location': [3, 4, 2], 'Density': 3.14159}], \
-        "Assert getting contained data succesful failed"
+        "Assert getting contained data successful failed"
     assert container_test.getEnclosedData([[6, 6], [6, 6], [6, 6]]) == [], \
-        "Assert getting enclosed data unsuccesful failed"
+        "Assert getting enclosed data unsuccessful failed"
     assert container_test.lengthOfData() == 4, \
         "Assert input data length failed"
     container_test.loadFile("unit_testfile2.json")
@@ -81,6 +81,8 @@ def container_unit_test():
 def prop_calc_unit_test():
     """Unit tests for external properties calculators"""
     sigma = 0.01
-    test_density = 6.17008
+    test_density = 6.17008E-3
     assert (test_density - sigma * test_density) <= ExtPropCalc.cellDensity([10, 10, 10], 2, 0.00787)\
            <= (test_density + sigma * test_density), "Assert cell density calculation failed"
+
+    print('Unit test passed: properties calculator')

@@ -85,7 +85,7 @@ class Container:
         """Always returns data. If getEnclosedData() returns empty, getNearestData() returns closest data point"""
 
         data_list = self.getEnclosedData(minmax_coordinates)
-        if data_list == []:
+        if not data_list:
             coords_x = (minmax_coordinates[0][0] + minmax_coordinates[0][1]) / 2
             coords_y = (minmax_coordinates[1][0] + minmax_coordinates[1][1]) / 2
             coords_z = (minmax_coordinates[2][0] + minmax_coordinates[2][1]) / 2
