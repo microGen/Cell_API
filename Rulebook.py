@@ -36,16 +36,23 @@ class Rule:
 
 
 
-class Density(Rule):
+class Density_min(Rule):
     """Tests cell against set density."""
 
     def __init__(self, prop_name):
         super().__init__(prop_name)
 
-    def apply_min(self, grid_data, cell_density):
+    def apply(self, grid_data, cell_density):
         """Returns true if cell density is lower than set density"""
         return grid_data[self.getProp()] > cell_density
 
-    def apply_max(self, grid_data, cell_density):
+
+class Density_min(Rule):
+    """Tests cell against set density."""
+
+    def __init__(self, prop_name):
+        super().__init__(prop_name)
+
+    def apply(self, grid_data, cell_density):
         """Returns true if cell density is higher than set density"""
         return grid_data[self.getProp()] < cell_density

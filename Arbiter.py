@@ -1,24 +1,16 @@
 from numpy import inf
 from math import sqrt
+from ExtPropCalc import minmaxCoordinates
 
 class Arbiter:
-    def __init(self, *args):
+    def __init(self, data_container, *args):
+        self.__data_container = data_container
         pass
 
     ####################################################################################################################
 
 
-    def fetchGridData(self, enclosed, minmax, nearest, coordinates):
-        grid_data = enclosed(minmax)
-        if not grid_data:
-            grid_data = nearest(coordinates)
-
-        return grid_data
-
-    ####################################################################################################################
-
-
-    def applyRules(self, cell, rules, priorities, *calc):
+    def applyRules(self, cell, rules, priorities, calc):
         """Applies the passed rules to cell and returns a boolean.
         cell: Cell to be tested against rules.
         rules: A list of rule classes.
@@ -28,6 +20,12 @@ class Arbiter:
         Return Values: True - Cell is within set properties. False - Cell exceeds properties
         """
 
+        cell_minmax = minmaxCoordinates(cell.properties('location'), cell.properties('dimensions'))
+        grid_data = self.__data_container.getData(cell_minmax)
+
+        for rule in rules:
+            prop = rule.getProp()
+            rule.apply(prop, grid_data['prop'])
 
         pass
 

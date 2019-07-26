@@ -6,7 +6,7 @@ class Cell:
     """Cell Prototype, used to build up cell structure. Finalized cells are handled by class 'CellFinal'"""
 
     def __init__(self, serial_number, location, dimensions, ext_properties):
-        self.__properties = {'location': location, 'dimensions': dimensions, 'minmax': []}
+        self.__properties = {'location': location, 'dimensions': dimensions}
         self.__properties.update(ext_properties)
 
         self.__ID = serial_number
