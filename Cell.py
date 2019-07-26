@@ -1,5 +1,6 @@
 from operator import itemgetter
 from CellGeometry import Vertex, Edge, Face
+from ExtPropCalc import minmaxCoordinates
 
 class Cell:
     """Cell Prototype, used to build up cell structure. Finalized cells are handled by class 'CellFinal'"""
@@ -10,11 +11,6 @@ class Cell:
 
         self.__ID = serial_number
         self.__final = False
-
-        for i in range(3):
-            min_location = self.__properties['location'][i] - self.__properties['dimensions'][i] / 2
-            max_location = self.__properties['location'][i] + self.__properties['dimensions'][i] / 2
-            self.__properties['minmax'].append([min_location, max_location])
 
         '''
         local coordinate system:
@@ -29,15 +25,17 @@ class Cell:
             face0:      v0, v1, v2, v3 |face1:      v0, v1, v4, v5 |face5:      v4, v5, v6, v7
         '''
 
+        self.__minmax = minmaxCoordinates(self.__properties['location'], self.__properties['dimensions'])
+
         #list of coordinates for cell vertices
-        c_list = [[self.__properties['minmax'][0][0], self.__properties['minmax'][1][0], self.__properties['minmax'][2][0]], \
-                  [self.__properties['minmax'][0][1], self.__properties['minmax'][1][0], self.__properties['minmax'][2][0]], \
-                  [self.__properties['minmax'][0][1], self.__properties['minmax'][1][1], self.__properties['minmax'][2][0]], \
-                  [self.__properties['minmax'][0][0], self.__properties['minmax'][1][1], self.__properties['minmax'][2][0]], \
-                  [self.__properties['minmax'][0][0], self.__properties['minmax'][1][0], self.__properties['minmax'][2][1]], \
-                  [self.__properties['minmax'][0][1], self.__properties['minmax'][1][0], self.__properties['minmax'][2][1]], \
-                  [self.__properties['minmax'][0][1], self.__properties['minmax'][1][1], self.__properties['minmax'][2][1]], \
-                  [self.__properties['minmax'][0][0], self.__properties['minmax'][1][1], self.__properties['minmax'][2][1]]]
+        c_list = [[self.__minmax[0][0], self.__minmax[1][0], self.__minmax[2][0]], \
+                  [self.__minmax[0][1], self.__minmax[1][0], self.__minmax[2][0]], \
+                  [self.__minmax[0][1], self.__minmax[1][1], self.__minmax[2][0]], \
+                  [self.__minmax[0][0], self.__minmax[1][1], self.__minmax[2][0]], \
+                  [self.__minmax[0][0], self.__minmax[1][0], self.__minmax[2][1]], \
+                  [self.__minmax[0][1], self.__minmax[1][0], self.__minmax[2][1]], \
+                  [self.__minmax[0][1], self.__minmax[1][1], self.__minmax[2][1]], \
+                  [self.__minmax[0][0], self.__minmax[1][1], self.__minmax[2][1]]]
 
         #list of vertices
         self.__vertices = [Vertex(c_list[i], i) for i in range(8)]
@@ -56,6 +54,9 @@ class Cell:
                                   self.__vertices[((i+5) | 4) & 7], \
                                   self.__vertices[i+4], i+1) for i in range(4)])
         self.__faces.append(Face(self.__vertices[4], self.__vertices[5], self.__vertices[6], self.__vertices[7], 5))
+
+        self.__properties.update({'volume': \
+            self.__edges[0].getLength() * self.__edges[1].getLength() * self.__edges[4].getLength()})
 
     ####################################################################################################################
 

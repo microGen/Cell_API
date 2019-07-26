@@ -18,21 +18,13 @@ def cell_unit_test():
     cell_test_dimensions = [2, 2, 2]
     cell_test_ext_data = {'density': 1, 'youngs': 100000000, 'poisson': 0.3}
 
-    ctm_xmin = cell_test_location[0] - cell_test_dimensions[0] / 2
-    ctm_xmax = cell_test_location[0] + cell_test_dimensions[0] / 2
-    ctm_ymin = cell_test_location[1] - cell_test_dimensions[1] / 2
-    ctm_ymax = cell_test_location[1] + cell_test_dimensions[1] / 2
-    ctm_zmin = cell_test_location[2] - cell_test_dimensions[2] / 2
-    ctm_zmax = cell_test_location[2] + cell_test_dimensions[2] / 2
-    cell_test_minmax = [[ctm_xmin, ctm_xmax], [ctm_ymin, ctm_ymax], [ctm_zmin, ctm_zmax]]
     cell_test_volume = cell_test_dimensions[0] * cell_test_dimensions[1] * cell_test_dimensions[2]
 
     cell_test = Cell(cell_test_id, cell_test_location, cell_test_dimensions, cell_test_ext_data)
 
     assert cell_test.ID() == cell_test_id, "Cell ID assertion failed."
-    assert cell_test.location() == cell_test_location, "Cell location assertion failed."
-    assert cell_test.dimensions() == cell_test_dimensions, "Cell dimensions assertion failed."
-    assert cell_test.minmax() == cell_test_minmax, "Cell min/max coordinates assertion failed"
+    assert cell_test.properties('location') == cell_test_location, "Cell location assertion failed."
+    assert cell_test.properties('dimensions') == cell_test_dimensions, "Cell dimensions assertion failed."
     for i in range(8):
         assert type(cell_test.vertices()[i]) is CellGeometry.Vertex, "Cell vertex type assertion failed"
         #assert location of individual vertices

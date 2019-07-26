@@ -4,13 +4,13 @@ import Testing
 import Rulebook
 import ExtPropCalc
 
-debug_cell = False
+debug_cell = True
 debug_json = False
-debug_rules = True
+debug_rules = False
 
 print('Testing stage for Cell API\n')
 
-#Testing.cell_unit_test()
+Testing.cell_unit_test()
 Testing.container_unit_test()
 Testing.prop_calc_unit_test()
 
@@ -25,15 +25,14 @@ print('\n\n--- EXPERIMENTAL AREA ---\n')
 if debug_cell:
     print('Cell data:')
     print('ID:\t\t\t', c.ID())
-    print('Pos:\t\t', c.location())
-    print('Dims:\t\t', c.dimensions())
-    print('MinMax:\t\t', c.minmax())
-    print('Volume:\t\t', c.volume())
-    print('CoreProps:\t', c.coreProperties())
-    print('ExtProps:\t', c.extProperties())
+    print('Pos:\t\t', c.properties('location'))
+    print('Dims:\t\t', c.properties('dimensions'))
+    print('Volume:\t\t', c.properties('volume'))
+    print('CoreProps:\t', c.properties('location', 'dimensions', 'volume'))
+    print('ExtProps:\t', c.properties('density'))
     print(c.vertices(), '\n')
     print(c.vertices(1), '\n')
-    print(c.vertices([0, 2, 3]), '\n')
+    print(c.vertices(0, 2, 3), '\n')
     print(c.edges(), '\n')
     print(c.faces(), '\n')
 
@@ -52,3 +51,4 @@ if debug_rules:
     tr = Rulebook.Density('density')
     print(tr.getProp())
     print(tr.apply_min(cont.getNearestData([-432432, -42343242, 4234324]), dens))
+
