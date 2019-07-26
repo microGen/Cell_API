@@ -12,7 +12,7 @@ print('Testing stage for Cell API\n')
 
 Testing.cell_unit_test()
 Testing.container_unit_test()
-#Testing.prop_calc_unit_test()
+Testing.prop_calc_unit_test()
 
 loc = [1, 1, 1]
 dim = [2, 2, 2]
@@ -29,7 +29,7 @@ if debug_cell:
     print('Dims:\t\t', c.properties('dimensions'))
     print('Volume:\t\t', c.properties('volume'))
     print('CoreProps:\t', c.properties('location', 'dimensions', 'volume'))
-    print('ExtProps:\t', c.properties('density'))
+    print('ExtProps:\t', c.properties('mat_density'))
     print(c.vertices(), '\n')
     print(c.vertices(1), '\n')
     print(c.vertices(0, 2, 3), '\n')
@@ -45,12 +45,13 @@ if debug_json:
 
 if debug_rules:
     print(c.properties('dimensions'))
-    cd = ExtPropCalc.CellDensity()
-    print('prop:', cd.getProp(), 'ressources: ', cd.getResources())
-    dens = cd.calc(c.properties('dimensions'), 0.2, c.properties('mat_density'))
+    print('prop:', ExtPropCalc.CellDensity.getProp(), 'ressources: ', ExtPropCalc.CellDensity.getResources())
+    dens = ExtPropCalc.CellDensity.calc(c.properties('dimensions'), 0.2, c.properties('mat_density'))
     print('Nearest Data:\t\t', cont.getNearestData([-432432, -42343242, 4234324]))
     print(dens)
-    tr = Rulebook.Density_min()
-    print(tr.getProp())
-    print(tr.apply(cont.getNearestData([-432432, -42343242, 4234324]), dens))
+    print(Rulebook.Density_min.getProp())
+    print(Rulebook.Density_min.apply(cont.getNearestData([-432432, -42343242, 4234324]), dens))
 
+# print(ExtPropCalc.CellDensity.getResources())
+# print(Rulebook.Density_min.getProp())
+# print(Rulebook.Density_min.apply(cont.getNearestData([-432432, -42343242, 4234324]), 0.0023))

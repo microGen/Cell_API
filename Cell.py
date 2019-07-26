@@ -25,8 +25,7 @@ class Cell:
             face0:      v0, v1, v2, v3 |face1:      v0, v1, v4, v5 |face5:      v4, v5, v6, v7
         '''
 
-        mmc = MinMaxCoordinates()
-        self.__minmax = mmc.calc(self.__properties['location'], self.__properties['dimensions'])
+        self.__minmax = MinMaxCoordinates.calc(self.__properties['location'], self.__properties['dimensions'])
 
         #list of coordinates for cell vertices
         c_list = [[self.__minmax[0][0], self.__minmax[1][0], self.__minmax[2][0]], \
@@ -118,14 +117,6 @@ class Cell:
                     ret_faces.append(self.__faces[i])
                 return ret_faces
 
-    ####################################################################################################################
-
-
-    def volume(self):
-        edge0 = self.__edges[0]
-        edge1 = self.__edges[1]
-        edge2 = self.__edges[2]
-        return edge0.getLength() * edge1.getLength() * edge2.getLength()
 
     ####################################################################################################################
 

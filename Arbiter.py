@@ -1,6 +1,6 @@
 from numpy import inf
 from math import sqrt
-from ExtPropCalc import minmaxCoordinates
+from ExtPropCalc import MinMaxCoordinates
 
 class Arbiter:
     def __init(self, data_container, *args):

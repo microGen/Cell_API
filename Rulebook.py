@@ -7,33 +7,37 @@ e.g. density.
 
 Implemented properties:
 +core properties:
--- all:                 <cell>.coreProperties()
---- location:           <cell>.location()
---- dimensions:         <cell>.dimensions()
---- volume:             <cell>.volume()
+--- location:           <cell>.properties('location')
+--- dimensions:         <cell>.properties('dimension')
+--- volume:             <cell>.properties('volume')
 +external properties:
--- all:                 <cell>.extProperties()
---- material density:   <cell>.extProperties('density')
---- Young's modulus:    <cell>.extProperties('youngs')
---- Poisson's ratio:    <cell>.extProperties('poisson')
---- cell density:       ExtPropCalc.cellDensity()
+--- material density:   <cell>.properties('density')
+--- Young's modulus:    <cell>.properties('youngs')
+--- Poisson's ratio:    <cell>.properties('poisson')
+--- cell density:       ExtPropCalc.CellDensity
 """
 
 class PropRule:
     """Prototype Property Calculator / Rule"""
 
-    def __init__(self, prop_name, *ressources):
-        self.__prop_name = prop_name
-        self.__ressources = ressources
+    def __init__(self):
+        pass
 
-    def getProp(self):
-        """Returns name of the property that the rule uses"""
-        return self.__prop_name
+    # def getProp(self):
+    #     """Returns name of the property that the rule uses"""
+    #     return self.__prop_name
+    #
+    # def getResources(self):
+    #     """Returns list of necessary resources to implement calculator or rule"""
+    #     return self.__resources
 
-    def getResources(self):
-        """Returns list of necessary resources to implement calculator or rule"""
-        return self.__ressources
+    @classmethod
+    def getProp(cls):
+        return(cls.prop)
 
+    @classmethod
+    def getResources(cls):
+        return cls.resources
 
 
 ########################################################################################################################
@@ -44,20 +48,26 @@ class PropRule:
 class Density_min(PropRule):
     """Tests cell against set density."""
 
-    def __init__(self):
-        super().__init__('mat_density')
+    prop = 'mat_density'
 
-    def apply(self, grid_data, cell_density):
+    def __init__(self):
+        pass
+
+    @classmethod
+    def apply(cls, grid_data, cell_density):
         """Returns true if cell density is lower than set density"""
-        return grid_data[self.getProp()] > cell_density
+        return grid_data[cls.getProp()] > cell_density
 
 
 class Density_min(PropRule):
     """Tests cell against set density."""
 
-    def __init__(self):
-        super().__init__('mat_density')
+    prop = 'mat_density'
 
-    def apply(self, grid_data, cell_density):
+    def __init__(self):
+        pass
+
+    @classmethod
+    def apply(cls, grid_data, cell_density):
         """Returns true if cell density is higher than set density"""
-        return grid_data[self.getProp()] < cell_density
+        return grid_data[cls.getProp()] < cell_density

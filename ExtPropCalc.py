@@ -12,10 +12,14 @@ class CellDensity(PropRule):
     """Calculates the resulting density of the cell when void is subtracted from the outer wall.
     Air density is neglected."""
 
-    def __init__(self):
-        super().__init__('density', 'dimensions', 'wall_thickness', 'mat_density')
+    prop = 'density'
+    resources = ('dimensions', 'wall_thickness', 'mat_density')
 
-    def calc(self, dimensions, wall_thickness, mat_density):
+    def __init__(self):
+        super().__init__()
+
+    @classmethod
+    def calc(cls, dimensions, wall_thickness, mat_density):
         innerHexa = [i - 2*wall_thickness for i in dimensions]
         outerVolume = reduce(lambda res, i: res*i, dimensions)
         innerVolume = reduce(lambda res, i: res*i, innerHexa)
@@ -27,10 +31,14 @@ class MinMaxCoordinates(PropRule):
     """Calculates the min and max coordinates from cell location and dimensions.
     Min and Max can be calculated for any given dimensions."""
 
-    def __init__(self):
-        super().__init__('minmax', 'location', 'dimensions')
+    prop = 'minmax'
+    resources = ('location', 'dimensions')
 
-    def calc(self, location, dimensions):
+    def __init__(self):
+        super().__init__()
+
+    @classmethod
+    def calc(cls, location, dimensions):
         if (type(location) is int or type(location) is float) and (type(dimensions) is int or type(dimensions) is float):
             min_location = location - dimensions / 2
             max_location = location + dimensions / 2

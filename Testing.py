@@ -32,10 +32,7 @@ def cell_unit_test():
         assert type(cell_test.edges()[i]) is CellGeometry.Edge, "Cell edge type assertion failed"
     for i in range(6):
         assert type(cell_test.faces()[i]) is CellGeometry.Face, "Cell face type assertion failed"
-    assert cell_test.volume() == cell_test_volume, "Cell volume assertion failed"
-    #assert cell_test.coreProperties() == {'Location': cell_test_location,\
-    #                                      'Dimensions': cell_test_dimensions,\
-    #                                      'Volume': cell_test_volume}, "Cell core properties assertion failed"
+    assert cell_test.properties('volume') == cell_test_volume, "Cell volume assertion failed"
     assert cell_test.isFinal() == False, "Cell state assertion 1 failed: final state reached unexpectedly"
     cell_test.setFinal()
     assert cell_test.isFinal() == True, "Cell state assertion 2 failed: final state not reached"
@@ -72,10 +69,9 @@ def container_unit_test():
 
 def prop_calc_unit_test():
     """Unit tests for external properties calculators"""
-    cd = ExtPropCalc.CellDensity()
     sigma = 0.01
     test_density = 6.17008E-3
-    assert (test_density - sigma * test_density) <= cd.calc([10, 10, 10], 2, 0.00787)\
+    assert (test_density - sigma * test_density) <= ExtPropCalc.CellDensity.calc([10, 10, 10], 2, 0.00787)\
            <= (test_density + sigma * test_density), "Assert cell density calculation failed"
 
     print('Unit test passed: properties calculator')
