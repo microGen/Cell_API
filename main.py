@@ -3,10 +3,11 @@ from FileIO import FileIO
 import Testing
 import Rulebook
 import ExtPropCalc
+from Arbiter import Arbiter
 
 debug_cell = False
 debug_json = False
-debug_rules = True
+debug_rules = False
 
 print('Testing stage for Cell API\n')
 
@@ -46,12 +47,15 @@ if debug_json:
 if debug_rules:
     print(c.properties('dimensions'))
     print('prop:', ExtPropCalc.CellDensity.getProp(), 'ressources: ', ExtPropCalc.CellDensity.getResources())
-    dens = ExtPropCalc.CellDensity.calc(c.properties('dimensions'), 0.2, c.properties('mat_density'))
+    dens = ExtPropCalc.CellDensity.calc([c.properties('dimensions'), 0.2, c.properties('mat_density')])
     print('Nearest Data:\t\t', cont.getNearestData([-432432, -42343242, 4234324]))
     print(dens)
     print(Rulebook.Density_min.getProp())
     print(Rulebook.Density_min.apply(cont.getNearestData([-432432, -42343242, 4234324]), dens))
 
-# print(ExtPropCalc.CellDensity.getResources())
-# print(Rulebook.Density_min.getProp())
-# print(Rulebook.Density_min.apply(cont.getNearestData([-432432, -42343242, 4234324]), 0.0023))
+print(ExtPropCalc.CellDensity.getResources())
+print(Rulebook.Density_min.getResources())
+print(Rulebook.Density_min.apply(cont.getNearestData([-432432, -42343242, 4234324]), 0.0023))
+
+a = Arbiter(cont)
+a.applyRules(c, [Rulebook.Density_min], 1, [0])

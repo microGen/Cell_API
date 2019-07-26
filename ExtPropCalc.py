@@ -19,7 +19,11 @@ class CellDensity(PropRule):
         super().__init__()
 
     @classmethod
-    def calc(cls, dimensions, wall_thickness, mat_density):
+    def calc(cls, ext_resources):
+        """ext_resources: dimensions, wall_thickness, mat_density"""
+        dimensions = ext_resources[0]
+        wall_thickness = ext_resources[1]
+        mat_density = ext_resources[2]
         innerHexa = [i - 2*wall_thickness for i in dimensions]
         outerVolume = reduce(lambda res, i: res*i, dimensions)
         innerVolume = reduce(lambda res, i: res*i, innerHexa)
@@ -38,7 +42,9 @@ class MinMaxCoordinates(PropRule):
         super().__init__()
 
     @classmethod
-    def calc(cls, location, dimensions):
+    def calc(cls, ext_resources):
+        location = ext_resources[0]
+        dimensions = ext_resources[1]
         if (type(location) is int or type(location) is float) and (type(dimensions) is int or type(dimensions) is float):
             min_location = location - dimensions / 2
             max_location = location + dimensions / 2

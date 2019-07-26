@@ -3,7 +3,7 @@ from math import sqrt
 from ExtPropCalc import MinMaxCoordinates
 
 class Arbiter:
-    def __init(self, data_container, *args):
+    def __init__(self, data_container, *args):
         self.__data_container = data_container
         pass
 
@@ -20,14 +20,23 @@ class Arbiter:
         Return Values: True - Cell is within set properties. False - Cell exceeds properties
         """
 
-        cell_minmax = minmaxCoordinates(cell.properties('location'), cell.properties('dimensions'))
+        #cell_minmax = MinMaxCoordinates.calc([cell.properties('location'), cell.properties('dimensions')])
         grid_data = self.__data_container.getData(cell_minmax)
 
-        for rule in rules:
-            prop = rule.getProp()
-            rule.apply(prop, grid_data['prop'])
-
-        pass
+        rule_results = []
+        for i in range(len(rules)):
+            resource = rules[i].getResources()
+            if calc[i] != 0:
+                pcalc = calc[i]
+                pcalc_resources = pcalc.getResources()
+                resource_list = []
+                for r in pcalc_resources:
+                    resource_list.append(cell.properties(r))
+                pcalc_result = pcalc.calc(resource_list)
+                rule_results.append(rules[i].apply(pcalc_result, grid_data[resource]))
+            else:
+                rule_results.append(rules[i].apply(cell.properties(resource), grid_data[resource]))
+        return rule_results
 
     ####################################################################################################################
 

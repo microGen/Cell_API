@@ -71,7 +71,7 @@ def prop_calc_unit_test():
     """Unit tests for external properties calculators"""
     sigma = 0.01
     test_density = 6.17008E-3
-    assert (test_density - sigma * test_density) <= ExtPropCalc.CellDensity.calc([10, 10, 10], 2, 0.00787)\
+    assert (test_density - sigma * test_density) <= ExtPropCalc.CellDensity.calc([[10, 10, 10], 2, 0.00787])\
            <= (test_density + sigma * test_density), "Assert cell density calculation failed"
 
     print('Unit test passed: properties calculator')

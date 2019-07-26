@@ -33,10 +33,12 @@ class PropRule:
 
     @classmethod
     def getProp(cls):
+        """Name of the property that a child class generates."""
         return(cls.prop)
 
     @classmethod
     def getResources(cls):
+        """Name(s) of the resources (properties) that a child class needs to generate results"""
         return cls.resources
 
 
@@ -46,9 +48,9 @@ class PropRule:
 
 
 class Density_min(PropRule):
-    """Tests cell against set density."""
+    """Tests cell against set density: Cell density target is lower than givem grid point density"""
 
-    prop = 'mat_density'
+    resources = 'mat_density'
 
     def __init__(self):
         pass
@@ -56,13 +58,13 @@ class Density_min(PropRule):
     @classmethod
     def apply(cls, grid_data, cell_density):
         """Returns true if cell density is lower than set density"""
-        return grid_data[cls.getProp()] > cell_density
+        return grid_data[cls.getResources()] > cell_density
 
 
-class Density_min(PropRule):
-    """Tests cell against set density."""
+class Density_max(PropRule):
+    """Tests cell against set density: Cell density target is higher than givem grid point density"""
 
-    prop = 'mat_density'
+    resources = 'mat_density'
 
     def __init__(self):
         pass
@@ -70,4 +72,4 @@ class Density_min(PropRule):
     @classmethod
     def apply(cls, grid_data, cell_density):
         """Returns true if cell density is higher than set density"""
-        return grid_data[cls.getProp()] < cell_density
+        return grid_data[cls.getResources()] < cell_density
