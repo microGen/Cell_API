@@ -13,22 +13,23 @@ class CellDensity(PropRule):
     Air density is neglected."""
 
     prop = 'density'
-    resources = ('dimensions', 'wall_thickness', 'mat_density')
+    ### CHANGE DENSITY BACK TO MAT DENSITY
+    resources = ('dimensions', 'wall_thickness', 'density')
 
     def __init__(self):
         super().__init__()
 
     @classmethod
-    def calc(cls, *ext_resources):
+    def calc(cls, ext_resources):
         """ext_resources: dimensions, wall_thickness, mat_density"""
-        dimensions = ext_resources[0]
-        wall_thickness = ext_resources[1]
-        mat_density = ext_resources[2]
-        innerHexa = [i - 2*wall_thickness for i in dimensions]
-        outerVolume = reduce(lambda res, i: res*i, dimensions)
+        #dimensions = ext_resources['dimensions']
+        #wall_thickness = ext_resources[1]
+        #mat_density = ext_resources[2]
+        innerHexa = [i - 2*ext_resources['wall_thickness'] for i in ext_resources['dimensions']]
+        outerVolume = reduce(lambda res, i: res*i, ext_resources['dimensions'])
         innerVolume = reduce(lambda res, i: res*i, innerHexa)
 
-        return (outerVolume - innerVolume) / outerVolume * mat_density
+        return {cls.prop: (outerVolume - innerVolume) / outerVolume * ext_resources['density']}
 
 
 class MinMaxCoordinates(PropRule):

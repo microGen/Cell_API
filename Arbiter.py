@@ -95,11 +95,10 @@ class Arbiter:
             grid_resources = {}
             for resource in rule_resources:
                 grid_data = [gr[resource] for gr in grid_resource_list]
-                print('grid data: ', grid_data)
                 grid_resources.update({resource: calc_prop_opt(grid_data, prop_options[i])})
 
             print('cell resources: ', cell_resources, ', grid resources: ', grid_resources)
-            #rule_results.append(rules[i].apply(cell_properties, ))
+            rule_results.append(rules[i].apply(grid_resources, cell_resources))
 
         print("Rule results: ", rule_results)
         return rule_results

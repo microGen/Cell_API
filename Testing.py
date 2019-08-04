@@ -47,12 +47,12 @@ def container_unit_test():
 
     container_testfile = "unit_testfile.json"
     container_test = Container(container_testfile)
-    assert container_test.getNearestGridPoints([0, 0, 0]) == {'location': [0, 0, 0], 'mat_density': 1}, \
+    assert container_test.getNearestGridPoints([0, 0, 0]) == {'location': [0, 0, 0], 'density': 1}, \
         "Assert getting nearest data successful failed"
-    assert container_test.getNearestGridPoints([5, 5, 5]) == {'location': [4, 5, 4], 'mat_density': 5}, \
+    assert container_test.getNearestGridPoints([5, 5, 5]) == {'location': [4, 5, 4], 'density': 5}, \
         "Assert getting nearest data unsuccessful failed"
-    assert container_test.getEnclosedGridPoints([[1, 4], [1, 4], [1, 4]]) == [{'location': [1, 1, 1], 'mat_density': 2}, \
-                                                                              {'location': [3, 4, 2], 'mat_density': 3.14159}], \
+    assert container_test.getEnclosedGridPoints([[1, 4], [1, 4], [1, 4]]) == [{'location': [1, 1, 1], 'density': 2}, \
+                                                                              {'location': [3, 4, 2], 'density': 3.14159}], \
         "Assert getting contained data successful failed"
     assert container_test.getEnclosedGridPoints([[6, 6], [6, 6], [6, 6]]) == [], \
         "Assert getting enclosed data unsuccessful failed"
@@ -71,7 +71,8 @@ def prop_calc_unit_test():
     """Unit tests for external properties calculators"""
     sigma = 0.01
     test_density = 6.17008E-3
-    assert (test_density - sigma * test_density) <= ExtPropCalc.CellDensity.calc([10, 10, 10], 2, 0.00787)\
+    calc_result = ExtPropCalc.CellDensity.calc({'dimensions': [10, 10, 10], 'wall_thickness': 2, 'density': 0.00787})
+    assert (test_density - sigma * test_density) <= calc_result['density']\
            <= (test_density + sigma * test_density), "Assert cell density calculation failed"
 
     print('Unit test passed: properties calculator')

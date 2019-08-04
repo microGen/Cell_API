@@ -18,7 +18,8 @@ Testing.prop_calc_unit_test()
 loc = [1, 1, 1]
 dim = [2, 2, 2]
 
-c = Factories.cellFactory(3, loc, dim, {'mat_density': 0.00787}, False)
+### CHANGE DENSITY BACK TO MAT DENSITY WHEN CALCULATOR IS IMPLEMENTED ###
+c = Factories.cellFactory(3, loc, dim, {'density': 0.00787, 'wall_thickness': 0.2}, False)
 cont = Factories.containerFactory("json_test_input.txt")
 
 print('\n\n--- EXPERIMENTAL AREA ---\n')
@@ -59,4 +60,4 @@ if debug_rules:
 
 a = Arbiter(cont)
 #a.applyRules(c, [Rulebook.Density_min], 1, [0])
-a.applyRules2(c, [Rulebook.Density_min], 1, ['min'], [0])
+a.applyRules2(c, [Rulebook.Density_min], 1, ['min'], [ExtPropCalc.CellDensity])
