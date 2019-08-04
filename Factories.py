@@ -27,6 +27,8 @@ def arbiterFactory(*args):
 
     if args == ():
         arbiter_instance = Arbiter()
+    elif len(args) == 1:
+        arbiter_instance = Arbiter(args[0])
     else:
         arbiter_instance = Arbiter(args)
 

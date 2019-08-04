@@ -3,6 +3,7 @@ from FileIO import FileIO
 import Testing
 import Rulebook
 import ExtPropCalc
+import Helpers
 from Arbiter import Arbiter
 
 debug_cell = False
@@ -58,6 +59,5 @@ if debug_rules:
 #print(Rulebook.Density_min.getResources())
 #print(Rulebook.Density_min.apply(cont.getNearestGridPoints([-432432, -42343242, 4234324]), 0.0023))
 
-a = Arbiter(cont)
-#a.applyRules(c, [Rulebook.Density_min], 1, [0])
-a.applyRules2(c, [Rulebook.Density_min], 1, ['min'], [ExtPropCalc.CellDensity])
+a = Factories.arbiterFactory(cont)
+print('Cell Density < Grid Density? ', a.applyRules(c, [Rulebook.Density_min], 1, ['min'], [ExtPropCalc.CellDensity]))

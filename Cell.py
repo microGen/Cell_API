@@ -1,6 +1,6 @@
 from operator import itemgetter
 from CellGeometry import Vertex, Edge, Face
-from ExtPropCalc import MinMaxCoordinates
+from Helpers import MinMaxCoordinates
 
 class Cell:
     """Cell Prototype, used to build up cell structure. Finalized cells are handled by class 'CellFinal'"""
