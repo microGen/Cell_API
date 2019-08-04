@@ -48,9 +48,9 @@ class PropRule:
 
 
 class Density_min(PropRule):
-    """Tests cell against set density: Cell density target is lower than givem grid point density"""
+    """Tests cell against set density: Cell density target is lower than given grid point density"""
 
-    resources = 'mat_density'
+    resources = ('mat_density',)
 
     def __init__(self):
         pass
@@ -58,13 +58,13 @@ class Density_min(PropRule):
     @classmethod
     def apply(cls, grid_data, cell_density):
         """Returns true if cell density is lower than set density"""
-        return grid_data[cls.getResources()] > cell_density
+        return grid_data > cell_density
 
 
 class Density_max(PropRule):
-    """Tests cell against set density: Cell density target is higher than givem grid point density"""
+    """Tests cell against set density: Cell density target is higher than given grid point density"""
 
-    resources = 'mat_density'
+    resources = ('mat_density',)
 
     def __init__(self):
         pass
@@ -72,4 +72,4 @@ class Density_max(PropRule):
     @classmethod
     def apply(cls, grid_data, cell_density):
         """Returns true if cell density is higher than set density"""
-        return grid_data[cls.getResources()] < cell_density
+        return grid_data < cell_density

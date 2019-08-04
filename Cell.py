@@ -25,7 +25,7 @@ class Cell:
             face0:      v0, v1, v2, v3 |face1:      v0, v1, v4, v5 |face5:      v4, v5, v6, v7
         '''
 
-        self.__minmax = MinMaxCoordinates.calc([self.__properties['location'], self.__properties['dimensions']])
+        self.__minmax = MinMaxCoordinates.calc(self.__properties['location'], self.__properties['dimensions'])
 
         #list of coordinates for cell vertices
         c_list = [[self.__minmax[0][0], self.__minmax[1][0], self.__minmax[2][0]], \

@@ -39,23 +39,24 @@ if debug_cell:
 
 if debug_json:
     print('Input Data:\t\t\t', cont.dumpData())
-    print('Nearest Data:\t\t', cont.getNearestData([-432432, -42343242, 4234324]))
-    print('Enclosed Data:\t\t', cont.getEnclosedData([[4, 5], [4, 5], [4, 5]]))
-    print('All Data:\t\t\t', cont.getData([[4, 5], [4, 5], [4, 5]]))
+    print('Nearest Data:\t\t', cont.getNearestGridPoints([-432432, -42343242, 4234324]))
+    print('Enclosed Data:\t\t', cont.getEnclosedGridPoints([[4, 5], [4, 5], [4, 5]]))
+    print('All Data:\t\t\t', cont.getGridPoints([[4, 5], [4, 5], [4, 5]]))
     print('Data fields:\t\t', cont.lengthOfData())
 
 if debug_rules:
     print(c.properties('dimensions'))
     print('prop:', ExtPropCalc.CellDensity.getProp(), 'ressources: ', ExtPropCalc.CellDensity.getResources())
-    dens = ExtPropCalc.CellDensity.calc([c.properties('dimensions'), 0.2, c.properties('mat_density')])
-    print('Nearest Data:\t\t', cont.getNearestData([-432432, -42343242, 4234324]))
+    dens = ExtPropCalc.CellDensity.calc(c.properties('dimensions'), 0.2, c.properties('mat_density'))
+    print('Nearest Data:\t\t', cont.getNearestGridPoints([-432432, -42343242, 4234324]))
     print(dens)
     print(Rulebook.Density_min.getProp())
-    print(Rulebook.Density_min.apply(cont.getNearestData([-432432, -42343242, 4234324]), dens))
+    print(Rulebook.Density_min.apply(cont.getNearestGridPoints([-432432, -42343242, 4234324]), dens))
 
 print(ExtPropCalc.CellDensity.getResources())
 print(Rulebook.Density_min.getResources())
-print(Rulebook.Density_min.apply(cont.getNearestData([-432432, -42343242, 4234324]), 0.0023))
+#print(Rulebook.Density_min.apply(cont.getNearestGridPoints([-432432, -42343242, 4234324]), 0.0023))
 
 a = Arbiter(cont)
-a.applyRules(c, [Rulebook.Density_min], 1, [0])
+#a.applyRules(c, [Rulebook.Density_min], 1, [0])
+a.applyRules2(c, [Rulebook.Density_min], 1, [0])

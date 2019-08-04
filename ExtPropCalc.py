@@ -19,7 +19,7 @@ class CellDensity(PropRule):
         super().__init__()
 
     @classmethod
-    def calc(cls, ext_resources):
+    def calc(cls, *ext_resources):
         """ext_resources: dimensions, wall_thickness, mat_density"""
         dimensions = ext_resources[0]
         wall_thickness = ext_resources[1]
@@ -42,7 +42,7 @@ class MinMaxCoordinates(PropRule):
         super().__init__()
 
     @classmethod
-    def calc(cls, ext_resources):
+    def calc(cls, *ext_resources):
         location = ext_resources[0]
         dimensions = ext_resources[1]
         if (type(location) is int or type(location) is float) and (type(dimensions) is int or type(dimensions) is float):
