@@ -11,13 +11,13 @@ class Geometry:
     ####################################################################################################################
 
 
-    def getLocation(self):
+    def get_location(self):
         return self.__location
 
     ####################################################################################################################
 
 
-    def getID(self):
+    def get_ID(self):
         return self.__geometry_ID
 
 ########################################################################################################################
@@ -34,14 +34,14 @@ class CompGeom(Geometry):
     ####################################################################################################################
 
 
-    def getVertices(self):
+    def get_vertices(self):
         return self.__vertices
 
     ####################################################################################################################
 
 
-    def getVertexLocations(self):
-        return [i.getLocation() for i in self.__vertices]
+    def get_vertex_locations(self):
+        return [i.get_location() for i in self.__vertices]
 
 ########################################################################################################################
 ########################################################################################################################
@@ -64,15 +64,15 @@ class Edge(CompGeom):
     def __init__(self, vert0, vert1, geometry_ID):
         self.__vert0 = vert0
         self.__vert1 = vert1
-        position = [divisor / 2 for divisor in list(map(add, vert1.getLocation(), vert0.getLocation()))]
+        position = [divisor / 2 for divisor in list(map(add, vert1.get_location(), vert0.get_location()))]
         super().__init__([self.__vert0, self.__vert1], position, geometry_ID)
-
 
     ####################################################################################################################
 
-    def getLength(self):
-        v0_loc = self.__vert0.getLocation()
-        v1_loc = self.__vert1.getLocation()
+
+    def get_length(self):
+        v0_loc = self.__vert0.get_location()
+        v1_loc = self.__vert1.get_location()
         return sqrt((v0_loc[0] - v1_loc[0])**2 + (v0_loc[1] - v1_loc[1])**2 + (v0_loc[2] - v1_loc[2])**2)
 
 ########################################################################################################################
@@ -91,17 +91,17 @@ class Face(CompGeom):
         self.__edge1 = Edge(self.__vert1, self.__vert2, 1)
         self.__edge2 = Edge(self.__vert2, self.__vert3, 2)
         self.__edge3 = Edge(self.__vert3, self.__vert0, 3)
-        position = [divisor/2 for divisor in list(map(add, vert2.getLocation(), vert0.getLocation()))]
+        position = [divisor / 2 for divisor in list(map(add, vert2.get_location(), vert0.get_location()))]
         super().__init__([self.__vert0, self.__vert1, self.__vert2, self.__vert3], position, geometry_ID)
 
     ####################################################################################################################
 
 
-    def getEdgeLengths(self):
-        return [self.__edge0.getLength(), self.__edge1.getLength()]#
+    def get_edge_lengths(self):
+        return [self.__edge0.get_length(), self.__edge1.get_length()]#
 
     ####################################################################################################################
 
 
-    def getArea(self):
-        return self.__edge0.getLength() * self.__edge1.getLength()
+    def get_area(self):
+        return self.__edge0.get_length() * self.__edge1.get_length()

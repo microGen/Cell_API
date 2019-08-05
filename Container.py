@@ -23,7 +23,7 @@ class Container:
 
     ####################################################################################################################
 
-    def loadFile(self, filename):
+    def load_file(self, filename):
         if self.__infile:
             self.__infile.close()
         self.__infile = open(filename, 'r')
@@ -34,7 +34,7 @@ class Container:
     ####################################################################################################################
 
 
-    def getNearestGridPoints(self, coordinates):
+    def get_nearest_grid_points(self, coordinates):
         """Calculates the Euclidean distance between 'coordinates' and grid data and returns the data of the closest
         grid point"""
 
@@ -54,7 +54,7 @@ class Container:
     ####################################################################################################################
 
 
-    def getEnclosedGridPoints(self, minmax_coordinates):
+    def get_enclosed_grid_points(self, minmax_coordinates):
         """Returns a list of grid data of all grid elements within 'minmax_coordinates'"""
 
         x = 0
@@ -81,17 +81,17 @@ class Container:
     ####################################################################################################################
 
 
-    def getGridPoints(self, minmax_coordinates):
-        """Always returns grid point data. If getEnclosedGridPoints() returns empty,
-        getNearestGridPoints() returns closest data point"""
+    def get_grid_points(self, minmax_coordinates):
+        """Always returns grid point data. If get_enclosed_grid_points() returns empty,
+        get_nearest_grid_points() returns closest data point"""
 
-        data_list = self.getEnclosedGridPoints(minmax_coordinates)
+        data_list = self.get_enclosed_grid_points(minmax_coordinates)
         if not data_list:
             coords_x = (minmax_coordinates[0][0] + minmax_coordinates[0][1]) / 2
             coords_y = (minmax_coordinates[1][0] + minmax_coordinates[1][1]) / 2
             coords_z = (minmax_coordinates[2][0] + minmax_coordinates[2][1]) / 2
             coordinates = [coords_x, coords_y, coords_z]
-            data_list = [self.getNearestGridPoints(coordinates)]
+            data_list = [self.get_nearest_grid_points(coordinates)]
 
         return data_list
 
@@ -99,13 +99,13 @@ class Container:
 
     '''
     def getData(self, minmax_coordinates, *properties):
-        grid_points = self.getGridPoints(minmax_coordinates)
+        grid_points = self.get_grid_points(minmax_coordinates)
         grid_data = []
         for grid_point in grid_points:
             grid_point.
     '''
 
-    def dumpData(self):
+    def dump_data(self):
         """Returns input data as a string"""
 
         return json.dumps(self.__grid)
@@ -113,7 +113,7 @@ class Container:
     ####################################################################################################################
 
 
-    def lengthOfData(self):
+    def length_of_data(self):
         """Returns length of input grid data list"""
 
         return self.__grid_length

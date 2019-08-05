@@ -23,21 +23,13 @@ class PropRule:
     def __init__(self):
         pass
 
-    # def getProp(self):
-    #     """Returns name of the property that the rule uses"""
-    #     return self.__prop_name
-    #
-    # def getResources(self):
-    #     """Returns list of necessary resources to implement calculator or rule"""
-    #     return self.__resources
-
     @classmethod
-    def getProp(cls):
+    def get_prop(cls):
         """Name of the property that a child class generates."""
         return(cls.prop)
 
     @classmethod
-    def getResources(cls):
+    def get_resources(cls):
         """Name(s) of the resources (properties) that a child class needs to generate results"""
         return cls.resources
 

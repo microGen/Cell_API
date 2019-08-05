@@ -2,7 +2,7 @@ from Cell import Cell, CellFinal
 from Container import Container
 from Arbiter import Arbiter
 
-def cellFactory(serial_number, location, dimensions, ext_properties, state):
+def CELL(serial_number, location, dimensions, ext_properties, state):
     """Decides between returning a prototype cell or a final cell"""
 
     if not state:
@@ -12,7 +12,10 @@ def cellFactory(serial_number, location, dimensions, ext_properties, state):
 
     return cell_instance
 
-def containerFactory(*args):
+########################################################################################################################
+
+
+def CONTAINER(*args):
     """Returns a container object."""
 
     if args == ():
@@ -22,7 +25,10 @@ def containerFactory(*args):
 
     return container_instance
 
-def arbiterFactory(*args):
+########################################################################################################################
+
+
+def ARBITER(*args):
     """Returns an arbiter object."""
 
     if args == ():

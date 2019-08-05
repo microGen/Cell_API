@@ -56,12 +56,12 @@ class Cell:
         self.__faces.append(Face(self.__vertices[4], self.__vertices[5], self.__vertices[6], self.__vertices[7], 5))
 
         self.__properties.update({'volume': \
-            self.__edges[0].getLength() * self.__edges[1].getLength() * self.__edges[4].getLength()})
+                                      self.__edges[0].get_length() * self.__edges[1].get_length() * self.__edges[4].get_length()})
 
     ####################################################################################################################
 
 
-    def splitCell(self):
+    def split_cell(self):
         pass
 
     ####################################################################################################################
@@ -135,14 +135,14 @@ class Cell:
 
     ####################################################################################################################
 
-    def setFinal(self):
+    def set_final(self):
         if not self.__final:
             self.__final = True
 
     ####################################################################################################################
 
 
-    def isFinal(self):
+    def is_final(self):
         return self.__final
 
 
@@ -161,7 +161,7 @@ class CellFinal(Cell):
     ####################################################################################################################
 
 
-    def generateVectors(self):
+    def generate_paths(self):
         pass
 
 ########################################################################################################################

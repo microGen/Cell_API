@@ -33,9 +33,9 @@ def cell_unit_test():
     for i in range(6):
         assert type(cell_test.faces()[i]) is CellGeometry.Face, "Cell face type assertion failed"
     assert cell_test.properties('volume') == cell_test_volume, "Cell volume assertion failed"
-    assert cell_test.isFinal() == False, "Cell state assertion 1 failed: final state reached unexpectedly"
-    cell_test.setFinal()
-    assert cell_test.isFinal() == True, "Cell state assertion 2 failed: final state not reached"
+    assert cell_test.is_final() == False, "Cell state assertion 1 failed: final state reached unexpectedly"
+    cell_test.set_final()
+    assert cell_test.is_final() == True, "Cell state assertion 2 failed: final state not reached"
 
     print('Unit test passed: class Cell')
 
@@ -47,19 +47,19 @@ def container_unit_test():
 
     container_testfile = "unit_testfile.json"
     container_test = Container(container_testfile)
-    assert container_test.getNearestGridPoints([0, 0, 0]) == {'location': [0, 0, 0], 'density': 1}, \
+    assert container_test.get_nearest_grid_points([0, 0, 0]) == {'location': [0, 0, 0], 'density': 1}, \
         "Assert getting nearest data successful failed"
-    assert container_test.getNearestGridPoints([5, 5, 5]) == {'location': [4, 5, 4], 'density': 5}, \
+    assert container_test.get_nearest_grid_points([5, 5, 5]) == {'location': [4, 5, 4], 'density': 5}, \
         "Assert getting nearest data unsuccessful failed"
-    assert container_test.getEnclosedGridPoints([[1, 4], [1, 4], [1, 4]]) == [{'location': [1, 1, 1], 'density': 2}, \
-                                                                              {'location': [3, 4, 2], 'density': 3.14159}], \
+    assert container_test.get_enclosed_grid_points([[1, 4], [1, 4], [1, 4]]) == [{'location': [1, 1, 1], 'density': 2}, \
+                                                                                 {'location': [3, 4, 2], 'density': 3.14159}], \
         "Assert getting contained data successful failed"
-    assert container_test.getEnclosedGridPoints([[6, 6], [6, 6], [6, 6]]) == [], \
+    assert container_test.get_enclosed_grid_points([[6, 6], [6, 6], [6, 6]]) == [], \
         "Assert getting enclosed data unsuccessful failed"
-    assert container_test.lengthOfData() == 4, \
+    assert container_test.length_of_data() == 4, \
         "Assert input data length failed"
-    container_test.loadFile("unit_testfile2.json")
-    assert container_test.lengthOfData() == 1, \
+    container_test.load_file("unit_testfile2.json")
+    assert container_test.length_of_data() == 1, \
         "Assert input data length after loading different file failed"
 
     print('Unit test passed: class Container')
