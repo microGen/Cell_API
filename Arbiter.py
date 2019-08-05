@@ -11,7 +11,7 @@ class Arbiter:
     ####################################################################################################################
 
 
-    def applyRules(self, cell, rules, priorities, prop_options, calc):
+    def applyRules(self, cell, rules, prop_options, calc):
 
         # Handles choice of options for extraction of grid point properties.
         # Supported options are min, max, arithmetic mean (amn), median (med)
@@ -61,6 +61,7 @@ class Arbiter:
                 grid_data = [gr[resource] for gr in grid_resource_list]
                 grid_resources.update({resource: calc_prop_opt(grid_data, prop_options[i])})
             rule_results.append(rules[i].apply(grid_resources, cell_resources))
+
 
         return rule_results
 
