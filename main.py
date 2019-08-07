@@ -72,6 +72,4 @@ cells = a.create_cell_structure([10, 10, 10], [2, 2, 2], {'mat_density': 0.00787
 
 for cell in cells:
     result = a.apply_rules(cell, [Rulebook.Density_min], ['min'], [ExtPropCalc.CellDensity])
-    print('Grid Density > Cell Density? ', result)
-
-#print('Grid Density > Cell Density? ', a.apply_rules(c, [Rulebook.Density_min], ['min'], [ExtPropCalc.CellDensity]))
+    print(cell, ': Grid Density > Cell Density? ', result)

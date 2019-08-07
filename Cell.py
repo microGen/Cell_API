@@ -57,6 +57,7 @@ class Cell:
 
         self.__properties.update({'volume': \
                                       self.__edges[0].get_length() * self.__edges[1].get_length() * self.__edges[4].get_length()})
+        self.__properties.update({'vertices': self.vertices, 'edges': self.edges, 'faces': self.faces})
 
     ####################################################################################################################
 
@@ -132,6 +133,13 @@ class Cell:
                 return props
             else:
                 return self.__properties[key[0]]
+
+
+    ####################################################################################################################
+
+    def properties2(self, *key):
+        pass
+
 
     ####################################################################################################################
 

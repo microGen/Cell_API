@@ -54,11 +54,11 @@ class Arbiter:
             func = option_list.get(option)
             return func(properties)
 
+        # Get grid points with coordinates within - or if not available, closest to - cell
         cell_minmax = MinMaxCoordinates.calc(cell.properties('location'), cell.properties('dimensions'))
         grid_points = self.__data_container.get_grid_points(cell_minmax)
 
         rule_results = []
-
         for i in range(len(rules)):
             # Grid points should only get resource lists from rules as they must already contain the data that the rule
             # compares the cell to.
