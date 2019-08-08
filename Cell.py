@@ -12,18 +12,17 @@ class Cell:
         self.__ID = serial_number
         self.__final = False
 
-        '''
-        local coordinate system:
-        Z
-        |  Y
-        | /
-        ______X
 
-        Cell geometry count always stars at origin, goes ccw and up.
-        So: vertex0:    [0, 0, 0],     |vertex2:    [1, 1, 0],     |vertex6:    [1, 1, 1]
-            edge0:      v0->v1,        |edge4:      v0->v4,        |edge8:      v4->v5
-            face0:      v0, v1, v2, v3 |face1:      v0, v1, v4, v5 |face5:      v4, v5, v6, v7
-        '''
+        # local coordinate system:
+        # Z
+        # |  Y
+        # | /
+        # ______X
+        #
+        # Cell geometry count always stars at origin, goes ccw and up.
+        # So: vertex0:    [0, 0, 0],     |vertex2:    [1, 1, 0],     |vertex6:    [1, 1, 1]
+        #     edge0:      v0->v1,        |edge4:      v0->v4,        |edge8:      v4->v5
+        #     face0:      v0, v1, v2, v3 |face1:      v0, v1, v4, v5 |face5:      v4, v5, v6, v7
 
         self.__minmax = MinMaxCoordinates.calc(self.__properties['location'], self.__properties['dimensions'])
 

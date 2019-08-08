@@ -22,6 +22,7 @@ dim = [2, 2, 2]
 c = Factories.CELL(3, loc, dim, {'mat_density': 0.00787, 'wall_thickness': 0.2}, False)
 cont = Factories.CONTAINER("json_test_input.txt")
 cont2 = Factories.CONTAINER("grid_data.json")
+cont3 = Factories.CONTAINER("unit_testfile3.json")
 
 # cells = []
 # id = 0
@@ -56,15 +57,15 @@ if debug_json:
 
 if debug_rules:
     print(c.properties('dimensions'))
-    print('prop:', ExtPropCalc.CellDensity.get_prop(), 'ressources: ', ExtPropCalc.CellDensity.get_resources())
+    print('prop:', ExtPropCalc.CellDensity.get_prop(), 'ressources: ', ExtPropCalc.CellDensity.get_resources_grid())
     dens = ExtPropCalc.CellDensity.calc(c.properties('dimensions'), 0.2, c.properties('mat_density'))
     print('Nearest Data:\t\t', cont.get_nearest_grid_points([-432432, -42343242, 4234324]))
     print(dens)
     print(Rulebook.Density_min.get_prop())
     print(Rulebook.Density_min.apply(cont.get_nearest_grid_points([-432432, -42343242, 4234324]), dens))
 
-#print(ExtPropCalc.CellDensity.get_resources())
-#print(Rulebook.Density_min.get_resources())
+#print(ExtPropCalc.CellDensity.get_resources_grid())
+#print(Rulebook.Density_min.get_resources_grid())
 #print(Rulebook.Density_min.apply(cont.get_nearest_grid_points([-432432, -42343242, 4234324]), 0.0023))
 
 a = Factories.ARBITER(cont2)

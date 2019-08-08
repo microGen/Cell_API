@@ -29,10 +29,14 @@ class PropRule:
         return(cls.prop)
 
     @classmethod
-    def get_resources(cls):
-        """Name(s) of the resources (properties) that a child class needs to generate results"""
-        return cls.resources
+    def get_resources_grid(cls):
+        """Name(s) of the grid resources (properties) that a child class needs to generate results"""
+        return cls.grid_resources
 
+    @classmethod
+    def get_resources_cell(cls):
+        """Name(s) of the cell resources (properties) that a child class needs to generate results"""
+        return cls.cell_resources
 
 ########################################################################################################################
 ########################################################################################################################
@@ -42,7 +46,8 @@ class PropRule:
 class Density_min(PropRule):
     """Tests cell against set density: Cell density target is lower than given grid point density"""
 
-    resources = ('density',)
+    grid_resources = ('density',)
+    cell_resources = ('density',)
 
     def __init__(self):
         pass
@@ -55,10 +60,16 @@ class Density_min(PropRule):
         return grid_data > cell_data
 
 
+########################################################################################################################
+########################################################################################################################
+
+
+
 class Density_max(PropRule):
     """Tests cell against set density: Cell density target is higher than given grid point density"""
 
-    resources = ('density',)
+    grid_resources = ('density',)
+    cell_resources = ('density',)
 
     def __init__(self):
         pass
@@ -69,3 +80,7 @@ class Density_max(PropRule):
         grid_data = grid_data['density']
         cell_data = cell_data['density']
         return grid_data < cell_data
+
+
+########################################################################################################################
+########################################################################################################################

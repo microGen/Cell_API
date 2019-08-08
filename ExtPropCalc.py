@@ -13,7 +13,7 @@ class CellDensity(PropRule):
     Air density is neglected."""
 
     prop = 'density'
-    resources = ('dimensions', 'wall_thickness', 'mat_density')
+    cell_resources = ('dimensions', 'wall_thickness', 'mat_density')
 
     def __init__(self):
         super().__init__()
@@ -26,5 +26,9 @@ class CellDensity(PropRule):
         innerVolume = reduce(lambda res, i: res*i, innerHexa)
 
         return {cls.prop: (outerVolume - innerVolume) / outerVolume * ext_resources['mat_density']}
+
+
+########################################################################################################################
+########################################################################################################################
 
 
