@@ -22,7 +22,7 @@ loc = [1, 1, 1]
 dim = [2, 2, 2]
 
 c = Factories.CELL(3, loc, dim, {'mat_density': 0.00787, 'wall_thickness': 0.2}, False)
-cont = Factories.CONTAINER("json_test_input.txt")
+#cont = Factories.CONTAINER("json_test_input.txt")
 cont2 = Factories.CONTAINER("grid_data.json")
 
 # cells = []

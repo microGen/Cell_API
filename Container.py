@@ -7,7 +7,11 @@ class Container:
 
         if filename != ():
             self.__infile = open(filename[0], 'r')
-            self.__grid = json.load(self.__infile)
+            indata = json.load(self.__infile)
+            header = indata['header']
+            self.__origin = header['origin']
+            self.__dimensions = header['dimensions']
+            self.__grid = indata['body']
             self.__grid_length = len(self.__grid)
         else:
             self.__infile = None
@@ -27,7 +31,11 @@ class Container:
         if self.__infile:
             self.__infile.close()
         self.__infile = open(filename, 'r')
-        self.__grid = json.load(self.__infile)
+        indata = json.load(self.__infile)
+        header = indata['header']
+        self.__origin = header['origin']
+        self.__dimensions = header['dimensions']
+        self.__grid = indata['body']
         self.__grid_length = len(self.__grid)
 
 
@@ -41,12 +49,10 @@ class Container:
         data_index = randint(0, self.__grid_length)
         eucl_dist_prev = inf
 
-        for i in range(self.__grid_length):
-            str_i = str(i)
-            eucl_dist = sqrt(sum([(a - b) ** 2 for a, b in zip(coordinates, self.__grid[str_i]["location"])]))
-
+        for id, grid_point in self.__grid.items():
+            eucl_dist = sqrt(sum([(a - b) ** 2 for a, b in zip(coordinates, grid_point["location"])]))
             if eucl_dist < eucl_dist_prev:
-                data_index = str_i
+                data_index = id
             eucl_dist_prev = min(eucl_dist, eucl_dist_prev)
 
         return self.__grid[data_index]
@@ -69,12 +75,11 @@ class Container:
         z_max = minmax_coordinates[2][1]
         data_list = []
 
-        for i in range(self.__grid_length):
-            str_i = str(i)
-            if x_min <= self.__grid[str_i]['location'][x] <= x_max and \
-                                    y_min <= self.__grid[str_i]["location"][y] <= y_max and \
-                                    z_min <= self.__grid[str_i]["location"][z] <= z_max:
-                data_list.append(self.__grid[str_i])
+        for id, grid_point in self.__grid.items():
+            if x_min <= grid_point['location'][x] <= x_max and \
+                                    y_min <= grid_point["location"][y] <= y_max and \
+                                    z_min <= grid_point["location"][z] <= z_max:
+                data_list.append(grid_point)
 
         return data_list
 
