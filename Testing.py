@@ -5,9 +5,11 @@ from Cell import Cell, CellFinal
 import CellGeometry
 from Container import Container
 from Arbiter import Arbiter
+import Rulebook
 
 #Functions
 import ExtPropCalc
+import Helpers
 
 
 def cell_unit_test():
@@ -68,11 +70,34 @@ def container_unit_test():
 
 
 def prop_calc_unit_test():
-    """Unit tests for external properties calculators"""
+    """Unit tests for external property calculator functions"""
     sigma = 0.01
     test_density = 6.17008E-3
     calc_result = ExtPropCalc.CellDensity.calc({'dimensions': [10, 10, 10], 'wall_thickness': 2, 'mat_density': 0.00787})
     assert (test_density - sigma * test_density) <= calc_result['density']\
            <= (test_density + sigma * test_density), "Assert cell density calculation failed"
 
-    print('Unit test passed: properties calculator')
+    print('Unit test passed: Properties Calculator')
+
+    ####################################################################################################################
+
+
+def rulebook_unit_test():
+    """Unit tests for Rulebook"""
+    ut_grid = {'location': [1, 1, 1], 'density': 0.07}
+    ut_cell = Cell(0, [1, 1, 1], [1, 1, 1], {'density': 0.0699})
+    assert Rulebook.Density_min.apply(ut_grid, ut_cell.properties()) == True, "Assert Rulebook.Density_min failed"
+    assert Rulebook.Density_max.apply(ut_grid, ut_cell.properties()) == False, "Assert Rulebook.Density_max failed"
+
+    print('Unit test passed: Rulebook')
+
+    ####################################################################################################################
+
+
+def helpers_unit_test():
+    """Unit tests for helper functions"""
+    location = [2, 3, 4]
+    dimensions = [1, 7, 2]
+    assert Helpers.MinMaxCoordinates.calc(location, dimensions) == [[1.5, 2.5], [-0.5, 6.5], [3, 5]], "Assert Helpers.MinMaxCoordinates failed"
+
+    print('Unit test passed: Helpers')

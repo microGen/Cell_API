@@ -15,6 +15,8 @@ print('Testing stage for Cell API\n')
 Testing.cell_unit_test()
 Testing.container_unit_test()
 Testing.prop_calc_unit_test()
+Testing.rulebook_unit_test()
+Testing.helpers_unit_test()
 
 loc = [1, 1, 1]
 dim = [2, 2, 2]
@@ -22,7 +24,6 @@ dim = [2, 2, 2]
 c = Factories.CELL(3, loc, dim, {'mat_density': 0.00787, 'wall_thickness': 0.2}, False)
 cont = Factories.CONTAINER("json_test_input.txt")
 cont2 = Factories.CONTAINER("grid_data.json")
-cont3 = Factories.CONTAINER("unit_testfile3.json")
 
 # cells = []
 # id = 0
@@ -73,4 +74,4 @@ cells = a.create_cell_structure([10, 10, 10], [2, 2, 2], {'mat_density': 0.00787
 
 for cell in cells:
     result = a.apply_rules(cell, [Rulebook.Density_min], ['min'], [ExtPropCalc.CellDensity])
-    print(cell, ': Grid Density > Cell Density? ', result)
+    #print(cell, ': Grid Density > Cell Density? ', result)
