@@ -1,5 +1,5 @@
 from numpy import inf
-from math import sqrt
+from math import ceil
 from statistics import mean, median
 import Factories
 from Helpers import MinMaxCoordinates
@@ -56,7 +56,9 @@ class Arbiter:
 
         # Get grid points with coordinates within - or if not available, closest to - cell
         cell_minmax = MinMaxCoordinates.calc(cell.properties('location'), cell.properties('dimensions'))
-        grid_points = self.__data_container.get_grid_points(cell_minmax)
+        grid_points = self.__data_container.get_gridpoints(cell_minmax)
+        #gradient = self.gridpoint_gradient(grid_points)
+        self.gridpoint_gradient(grid_points)
 
         rule_results = []
         for i in range(len(rules)):
@@ -91,6 +93,30 @@ class Arbiter:
             #print('Grid resources: ', grid_resources, ' Cell resources: ', cell_resources)
 
         return rule_results
+
+    ####################################################################################################################
+
+    def gridpoint_gradient(self, gridpoints, *sample_width):
+        """Returns a list of gradients in X/Y/Z direction for passed gridpoints. If multiple gridpoints are passed,
+        the central one serves as a basis for gradient calculation. Step width sets the offset of sample points.
+        Gradient is calculated from 3 sample points: center and center +- sample_width, averaged. If sample width is not
+        set, it reverts to default of 1"""
+        if sample_width:
+            sample_width = sample_width[0]
+        min_index = self.__data_container.get_min_index
+        max_index = self.__data_container.get_max_index
+
+        truncate_lower = lambda cp, sw, ax: cp-sw if (cp-sw >= min_index(ax)) else min_index(ax)
+        truncate_upper = lambda cp, sw, ax: cp+sw if (cp+sw <= max_index(ax)) else max_index(ax)
+
+        gp_index = []
+        for gp in gridpoints:
+            gp_index.append(gp['index'])
+        mid_gp_index = ceil(len(gp_index) / 2) - 1
+        gradient_base = gp_index[mid_gp_index]
+        for axis, index in gradient_base.items():
+            # Work in progress, add gradient calculation
+            pass
 
     ####################################################################################################################
 

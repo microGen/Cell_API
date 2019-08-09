@@ -51,23 +51,23 @@ if debug_cell:
 
 if debug_json:
     print('Input Data:\t\t\t', cont.dump_data())
-    print('Nearest Data:\t\t', cont.get_nearest_grid_points([-432432, -42343242, 4234324]))
-    print('Enclosed Data:\t\t', cont.get_enclosed_grid_points([[4, 5], [4, 5], [4, 5]]))
-    print('All Data:\t\t\t', cont.get_grid_points([[4, 5], [4, 5], [4, 5]]))
+    print('Nearest Data:\t\t', cont.get_nearest_gridpoint([-432432, -42343242, 4234324]))
+    print('Enclosed Data:\t\t', cont.get_enclosed_gridpoints([[4, 5], [4, 5], [4, 5]]))
+    print('All Data:\t\t\t', cont.get_gridpoints([[4, 5], [4, 5], [4, 5]]))
     print('Data fields:\t\t', cont.length_of_data())
 
 if debug_rules:
     print(c.properties('dimensions'))
     print('prop:', ExtPropCalc.CellDensity.get_prop(), 'ressources: ', ExtPropCalc.CellDensity.get_resources_grid())
     dens = ExtPropCalc.CellDensity.calc(c.properties('dimensions'), 0.2, c.properties('mat_density'))
-    print('Nearest Data:\t\t', cont.get_nearest_grid_points([-432432, -42343242, 4234324]))
+    print('Nearest Data:\t\t', cont.get_nearest_gridpoint([-432432, -42343242, 4234324]))
     print(dens)
     print(Rulebook.Density_min.get_prop())
-    print(Rulebook.Density_min.apply(cont.get_nearest_grid_points([-432432, -42343242, 4234324]), dens))
+    print(Rulebook.Density_min.apply(cont.get_nearest_gridpoint([-432432, -42343242, 4234324]), dens))
 
 #print(ExtPropCalc.CellDensity.get_resources_grid())
 #print(Rulebook.Density_min.get_resources_grid())
-#print(Rulebook.Density_min.apply(cont.get_nearest_grid_points([-432432, -42343242, 4234324]), 0.0023))
+#print(Rulebook.Density_min.apply(cont.get_nearest_gridpoint([-432432, -42343242, 4234324]), 0.0023))
 
 a = Factories.ARBITER(cont2)
 cells = a.create_cell_structure([10, 10, 10], [2, 2, 2], {'mat_density': 0.00787, 'wall_thickness': 0.2})

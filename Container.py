@@ -11,6 +11,7 @@ class Container:
             header = indata['header']
             self.__origin = header['origin']
             self.__dimensions = header['dimensions']
+            self.__max_index = header['max_index']
             self.__grid = indata['body']
             self.__grid_length = len(self.__grid)
         else:
@@ -35,6 +36,7 @@ class Container:
         header = indata['header']
         self.__origin = header['origin']
         self.__dimensions = header['dimensions']
+        self.__max_index = header['max_index']
         self.__grid = indata['body']
         self.__grid_length = len(self.__grid)
 
@@ -42,7 +44,7 @@ class Container:
     ####################################################################################################################
 
 
-    def get_nearest_grid_points(self, coordinates):
+    def get_nearest_gridpoint(self, coordinates):
         """Calculates the Euclidean distance between 'coordinates' and grid data and returns the data of the closest
         grid point"""
 
@@ -60,7 +62,7 @@ class Container:
     ####################################################################################################################
 
 
-    def get_enclosed_grid_points(self, minmax_coordinates):
+    def get_enclosed_gridpoints(self, minmax_coordinates):
         """Returns a list of grid data of all grid elements within 'minmax_coordinates'"""
 
         x = 0
@@ -86,29 +88,51 @@ class Container:
     ####################################################################################################################
 
 
-    def get_grid_points(self, minmax_coordinates):
-        """Always returns grid point data. If get_enclosed_grid_points() returns empty,
-        get_nearest_grid_points() returns closest data point"""
+    def get_gridpoint_by_ID(self, ID):
+        """Returns grid point with passed ID"""
+        return self.__grid[ID]
 
-        data_list = self.get_enclosed_grid_points(minmax_coordinates)
+    ####################################################################################################################
+
+    def get_gridpoint_by_index(self, x_index, y_index, z_index):
+        "Returns grid point by converting the X/Y/Z index into the ID and passing it to get_gridpoint_by_ID()"
+        identifier = f"{x_index:06}.{y_index:06}.{z_index:06}"
+        return self.get_gridpoint_by_ID(identifier)
+
+
+    ####################################################################################################################
+
+
+    def get_gridpoints(self, minmax_coordinates):
+        """Always returns grid point data. If get_enclosed_gridpoints() returns empty,
+        get_nearest_gridpoint() returns closest data point"""
+
+        data_list = self.get_enclosed_gridpoints(minmax_coordinates)
         if not data_list:
             coords_x = (minmax_coordinates[0][0] + minmax_coordinates[0][1]) / 2
             coords_y = (minmax_coordinates[1][0] + minmax_coordinates[1][1]) / 2
             coords_z = (minmax_coordinates[2][0] + minmax_coordinates[2][1]) / 2
             coordinates = [coords_x, coords_y, coords_z]
-            data_list = [self.get_nearest_grid_points(coordinates)]
+            data_list = [self.get_nearest_gridpoint(coordinates)]
 
         return data_list
 
     ####################################################################################################################
 
-    '''
-    def getData(self, minmax_coordinates, *properties):
-        grid_points = self.get_grid_points(minmax_coordinates)
-        grid_data = []
-        for grid_point in grid_points:
-            grid_point.
-    '''
+
+    def get_max_index(self, axis):
+        keys = {'x': 0, 'y': 1, 'z': 2}
+        return self.__max_index[keys[axis]]
+
+    ####################################################################################################################
+
+
+    def get_min_index(self, axis):
+        keys = {'x': 0, 'y': 1, 'z': 2}
+        return self.__origin[keys[axis]]
+
+    ####################################################################################################################
+
 
     def dump_data(self):
         """Returns input data as a string"""

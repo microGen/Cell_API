@@ -49,15 +49,18 @@ def container_unit_test():
 
     container_testfile = "unit_testfile.json"
     container_test = Container(container_testfile)
-    assert container_test.get_nearest_grid_points([0, 0, 0]) == {'location': [0, 0, 0], 'density': 1}, \
+    assert container_test.get_nearest_gridpoint([0, 0, 0]) == {'index': [0, 0, 0], 'location': [0, 0, 0], 'density': 1}, \
         "Assert getting nearest data successful failed"
-    assert container_test.get_nearest_grid_points([5, 5, 5]) == {'location': [4, 5, 4], 'density': 5}, \
+    assert container_test.get_nearest_gridpoint([5, 5, 5]) == {'index': [3, 3, 3], 'location': [4, 5, 4], 'density': 5}, \
         "Assert getting nearest data unsuccessful failed"
-    assert container_test.get_enclosed_grid_points([[1, 4], [1, 4], [1, 4]]) == [{'location': [1, 1, 1], 'density': 2}, \
-                                                                                 {'location': [3, 4, 2], 'density': 3.14159}], \
+    assert container_test.get_enclosed_gridpoints([[1, 4], [1, 4], [1, 4]]) == \
+           [{'index': [1, 1, 1], 'location': [1, 1, 1], 'density': 2},\
+            {'index': [2, 2, 2], 'location': [3, 4, 2], 'density': 3.14159}], \
         "Assert getting contained data successful failed"
-    assert container_test.get_enclosed_grid_points([[6, 6], [6, 6], [6, 6]]) == [], \
+    assert container_test.get_enclosed_gridpoints([[6, 6], [6, 6], [6, 6]]) == [], \
         "Assert getting enclosed data unsuccessful failed"
+    assert container_test.get_gridpoint_by_index(0, 0, 0) == {'index': [0, 0, 0], 'location': [0, 0, 0], 'density': 1}, \
+        "Assert getting gridpoint by index failed"
     assert container_test.length_of_data() == 4, \
         "Assert input data length failed"
     container_test.load_file("unit_testfile2.json")
