@@ -120,17 +120,26 @@ class Arbiter:
         mid_gp_index = ceil(len(gridpoint_indices) / 2) - 1
         # ...to get the median gridpoint
         gradient_base = gridpoint_indices[mid_gp_index]
-        gridpoint_base = self.__data_container.get_gridpoint_by_ID(self.__gridpoint_ID(*list(gradient_base.values())))
+        gradient_base_ID = self.__gridpoint_ID(*list(gradient_base.values()))
+        gridpoint_base = self.__data_container.get_gridpoint_by_ID(gradient_base_ID)
         print(gridpoint_base)
 
+        gradient = []
         for axis, index in gradient_base.items():
             # Work in progress, add gradient calculation
-            print('axis: ', axis, ' index: ', index)
+            gradient_axis = gradient_base
             index_lower = limit_lower(index, sample_width, axis)
+            gradient_axis[axis] = index_lower
+            gradient_lower_ID = self.__gridpoint_ID(*list(gradient_axis.values()))
+            gridpoint_lower = self.__data_container.get_gridpoint_by_ID(gradient_lower_ID)
             index_upper = limit_upper(index, sample_width, axis)
-            print('index_lower: ', index_lower, 'index_upper: ', index_upper)
-
-            pass
+            gradient_axis[axis] = index_upper
+            gradient_upper_ID = self.__gridpoint_ID(*list(gradient_axis.values()))
+            gridpoint_upper = self.__data_container.get_gridpoint_by_ID(gradient_upper_ID)
+            print('lower ID: ', gradient_lower_ID, ' base ID: ', gradient_base_ID, ' upper ID: ', gradient_upper_ID)
+            for p in properties:
+                gradient_property = ((gridpoint_upper[p] - gridpoint_base[p]) + (gridpoint_base[p] - gridpoint_lower[p])) / 2
+                print(gradient_property)
 
     ####################################################################################################################
 
