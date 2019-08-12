@@ -8,6 +8,7 @@ class Arbiter:
     def __init__(self, data_container, *args):
         self.__data_container = data_container
         self.__cell_serial_number = 0
+        self.__gridpoint_ID = lambda x, y, z: str(f"{x:06}.{y:06}.{z:06}")
         pass
 
 
@@ -58,13 +59,13 @@ class Arbiter:
         cell_minmax = MinMaxCoordinates.calc(cell.properties('location'), cell.properties('dimensions'))
         grid_points = self.__data_container.get_gridpoints(cell_minmax)
         #gradient = self.gridpoint_gradient(grid_points)
-        self.gridpoint_gradient(grid_points)
 
         rule_results = []
         for i in range(len(rules)):
             # Grid points should only get resource lists from rules as they must already contain the data that the rule
             # compares the cell to.
             rule_resources_grid = rules[i].get_resources_grid()
+            self.gridpoint_gradient(grid_points, rule_resources_grid)
             rule_resources_cell = rules[i].get_resources_cell()
 
             # Choose how to get resource data from cell. If property calculator exists for rule, the resource list is
@@ -96,26 +97,39 @@ class Arbiter:
 
     ####################################################################################################################
 
-    def gridpoint_gradient(self, gridpoints, *sample_width):
+    def gridpoint_gradient(self, gridpoints, properties, *sample_width):
         """Returns a list of gradients in X/Y/Z direction for passed gridpoints. If multiple gridpoints are passed,
         the central one serves as a basis for gradient calculation. Step width sets the offset of sample points.
         Gradient is calculated from 3 sample points: center and center +- sample_width, averaged. If sample width is not
         set, it reverts to default of 1"""
         if sample_width:
             sample_width = sample_width[0]
+        else:
+            sample_width = 1
         min_index = self.__data_container.get_min_index
         max_index = self.__data_container.get_max_index
 
-        truncate_lower = lambda cp, sw, ax: cp-sw if (cp-sw >= min_index(ax)) else min_index(ax)
-        truncate_upper = lambda cp, sw, ax: cp+sw if (cp+sw <= max_index(ax)) else max_index(ax)
+        limit_lower = lambda cp, sw, ax: cp-sw if (cp-sw >= min_index(ax)) else min_index(ax)
+        limit_upper = lambda cp, sw, ax: cp+sw if (cp+sw <= max_index(ax)) else max_index(ax)
 
-        gp_index = []
+        # list gridpoint indices...
+        gridpoint_indices = []
         for gp in gridpoints:
-            gp_index.append(gp['index'])
-        mid_gp_index = ceil(len(gp_index) / 2) - 1
-        gradient_base = gp_index[mid_gp_index]
+            gridpoint_indices.append(gp['index'])
+        # ...and extract the median index...
+        mid_gp_index = ceil(len(gridpoint_indices) / 2) - 1
+        # ...to get the median gridpoint
+        gradient_base = gridpoint_indices[mid_gp_index]
+        gridpoint_base = self.__data_container.get_gridpoint_by_ID(self.__gridpoint_ID(*list(gradient_base.values())))
+        print(gridpoint_base)
+
         for axis, index in gradient_base.items():
             # Work in progress, add gradient calculation
+            print('axis: ', axis, ' index: ', index)
+            index_lower = limit_lower(index, sample_width, axis)
+            index_upper = limit_upper(index, sample_width, axis)
+            print('index_lower: ', index_lower, 'index_upper: ', index_upper)
+
             pass
 
     ####################################################################################################################
