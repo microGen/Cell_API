@@ -35,7 +35,7 @@ class Arbiter:
         cell: current cell to be examined
         rules: list of rules to apply for examination of cell
         prop_options: list of options of the same length as rules to set whether min/max/mean/median of applicable
-            grid data is to be used as input for the rule
+            grid data is to be used as input for the rule. Inputs: 'min', 'max', 'amn', 'med'
         calc: optional calculator. If a property is not directly supplied by cell data, a calculator can be applied for
             necessary calculations. Must be a list of the same length as rules. If no calculator is needed, the list
             must be 0"""
@@ -118,28 +118,32 @@ class Arbiter:
             gridpoint_indices.append(gp['index'])
         # ...and extract the median index...
         mid_gp_index = ceil(len(gridpoint_indices) / 2) - 1
-        # ...to get the median gridpoint
+        # ...to get the median gridpoint ID
         gradient_base = gridpoint_indices[mid_gp_index]
         gradient_base_ID = self.__gridpoint_ID(*list(gradient_base.values()))
-        gridpoint_base = self.__data_container.get_gridpoint_by_ID(gradient_base_ID)
-        print(gridpoint_base)
 
         gradient = []
         for axis, index in gradient_base.items():
-            # Work in progress, add gradient calculation
+            # gradient for current axis
             gradient_axis = gradient_base
+            # get the lower gridpoint on current axis
             index_lower = limit_lower(index, sample_width, axis)
             gradient_axis[axis] = index_lower
             gradient_lower_ID = self.__gridpoint_ID(*list(gradient_axis.values()))
             gridpoint_lower = self.__data_container.get_gridpoint_by_ID(gradient_lower_ID)
+            # get the upper gridpoint on current axis
             index_upper = limit_upper(index, sample_width, axis)
             gradient_axis[axis] = index_upper
             gradient_upper_ID = self.__gridpoint_ID(*list(gradient_axis.values()))
             gridpoint_upper = self.__data_container.get_gridpoint_by_ID(gradient_upper_ID)
-            print('lower ID: ', gradient_lower_ID, ' base ID: ', gradient_base_ID, ' upper ID: ', gradient_upper_ID)
+            print('axis: ', axis, ' lower ID: ', gradient_lower_ID, ' base ID: ', gradient_base_ID, ' upper ID: ', gradient_upper_ID)
+            # assemble list of property gradients for current axis
+            gradient_list = []
             for p in properties:
-                gradient_property = ((gridpoint_upper[p] - gridpoint_base[p]) + (gridpoint_base[p] - gridpoint_lower[p])) / 2
-                print(gradient_property)
+                gradient_list.append((gridpoint_upper[p] - gridpoint_lower[p]) / 2)
+            gradient.append(gradient_list)
+        print('gradient: ', gradient)
+        return gradient
 
     ####################################################################################################################
 
