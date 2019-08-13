@@ -56,16 +56,15 @@ class Arbiter:
             return func(properties)
 
         # Get grid points with coordinates within - or if not available, closest to - cell
-        cell_minmax = MinMaxCoordinates.calc(cell.properties('location'), cell.properties('dimensions'))
-        grid_points = self.__data_container.get_gridpoints(cell_minmax)
-        #gradient = self.gridpoint_gradient(grid_points)
+        gridpoints = self.__get_gridpoints(cell)
+        #gradient = self.gridpoint_gradient(gridpoints)
 
         rule_results = []
         for i in range(len(rules)):
             # Grid points should only get resource lists from rules as they must already contain the data that the rule
             # compares the cell to.
             rule_resources_grid = rules[i].get_resources_grid()
-            self.gridpoint_gradient(grid_points, rule_resources_grid)
+            #self.gridpoint_gradient(gridpoints, rule_resources_grid)
             rule_resources_cell = rules[i].get_resources_cell()
 
             # Choose how to get resource data from cell. If property calculator exists for rule, the resource list is
@@ -82,7 +81,7 @@ class Arbiter:
 
             # Get property list from the grid...
             grid_resource_list = []
-            for grid_point in grid_points:
+            for grid_point in gridpoints:
                 grid_resource = {rr: grid_point[rr] for rr in rule_resources_grid}
                 grid_resource_list.append(grid_resource)
             # ...and extract the min / max / mean / median value from list
@@ -97,11 +96,17 @@ class Arbiter:
 
     ####################################################################################################################
 
-    def gridpoint_gradient(self, gridpoints, properties, *sample_width):
+
+    def gridpoint_gradient(self, cell, rule, *sample_width):
         """Returns a list of gradients in X/Y/Z direction for passed gridpoints. If multiple gridpoints are passed,
         the central one serves as a basis for gradient calculation. Step width sets the offset of sample points.
         Gradient is calculated from 3 sample points: center and center +- sample_width, averaged. If sample width is not
         set, it reverts to default of 1"""
+
+        gridpoints = self.__get_gridpoints(cell)
+        properties = [p for p in rule.get_resources_grid()]
+        orientation = [o for o in rule.get_orientation()]
+
         if sample_width:
             sample_width = sample_width[0]
         else:
@@ -109,6 +114,7 @@ class Arbiter:
         min_index = self.__data_container.get_min_index
         max_index = self.__data_container.get_max_index
 
+        # limit the lower and upper indices for the gradient to the grid indices
         limit_lower = lambda cp, sw, ax: cp-sw if (cp-sw >= min_index(ax)) else min_index(ax)
         limit_upper = lambda cp, sw, ax: cp+sw if (cp+sw <= max_index(ax)) else max_index(ax)
 
@@ -148,5 +154,15 @@ class Arbiter:
     ####################################################################################################################
 
 
-    def split_cell(self, axis, cell):
+    def __get_gridpoints(self, cell):
+        """Returns a list of gridpoints that either are located in the space occupied by the passed cell or
+        - if no gridpoint is found within the cell's bounds, the closest gridpoint. Return data type is always list."""
+        cell_minmax = MinMaxCoordinates.calc(cell.properties('location'), cell.properties('dimensions'))
+        return self.__data_container.get_gridpoints(cell_minmax)
+
+    ####################################################################################################################
+
+    def split_cell(self, cell, command, gradient):
+        """If command is true, cell is split along or across gradient, depending on the rule setting. In order to split
+        the cell, core properties are extracted and used as base for the new cells."""
         pass

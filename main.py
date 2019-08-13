@@ -24,6 +24,7 @@ dim = [2, 2, 2]
 c = Factories.CELL(3, loc, dim, {'mat_density': 0.00787, 'wall_thickness': 0.2}, False)
 #cont = Factories.CONTAINER("json_test_input.txt")
 cont2 = Factories.CONTAINER("grid_data.json")
+cont3 = Factories.CONTAINER("grid_data_2.json")
 
 # cells = []
 # id = 0
@@ -69,9 +70,12 @@ if debug_rules:
 #print(Rulebook.Density_min.get_resources_grid())
 #print(Rulebook.Density_min.apply(cont.get_nearest_gridpoint([-432432, -42343242, 4234324]), 0.0023))
 
-a = Factories.ARBITER(cont2)
+a = Factories.ARBITER(cont3)
 cells = a.create_cell_structure([10, 10, 10], [2, 2, 2], {'mat_density': 0.00787, 'wall_thickness': 0.2})
 
+rules = [Rulebook.Density_min]
 for cell in cells:
-    result = a.apply_rules(cell, [Rulebook.Density_min], ['min'], [ExtPropCalc.CellDensity])
+    result = a.apply_rules(cell, rules, ['min'], [ExtPropCalc.CellDensity])
+    for rule in rules:
+        gradient = a.gridpoint_gradient(cell, rule)
     #print(cell, ': Grid Density > Cell Density? ', result)

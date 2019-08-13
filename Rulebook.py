@@ -38,6 +38,11 @@ class PropRule:
         """Name(s) of the cell resources (properties) that a child class needs to generate results"""
         return cls.cell_resources
 
+    @classmethod
+    def get_orientation(cls):
+        """Returns whether splitting the cell is done orthogonal or parallel to a property gradient for given rule"""
+        return cls.gradient_orientation
+
 ########################################################################################################################
 ########################################################################################################################
 
@@ -48,6 +53,7 @@ class Density_min(PropRule):
 
     grid_resources = ('density',)
     cell_resources = ('density',)
+    gradient_orientation = ('orthogonal',)
 
     def __init__(self):
         pass
@@ -70,6 +76,7 @@ class Density_max(PropRule):
 
     grid_resources = ('density',)
     cell_resources = ('density',)
+    gradient_orientation = ('orthogonal',)
 
     def __init__(self):
         pass
