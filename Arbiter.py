@@ -129,27 +129,27 @@ class Arbiter:
         gradient_base_ID = self.__gridpoint_ID(*list(gradient_base.values()))
 
         gradient = []
-        for axis, index in gradient_base.items():
-            # gradient for current axis
-            gradient_axis = gradient_base
-            # get the lower gridpoint on current axis
-            index_lower = limit_lower(index, sample_width, axis)
-            gradient_axis[axis] = index_lower
-            gradient_lower_ID = self.__gridpoint_ID(*list(gradient_axis.values()))
-            gridpoint_lower = self.__data_container.get_gridpoint_by_ID(gradient_lower_ID)
-            # get the upper gridpoint on current axis
-            index_upper = limit_upper(index, sample_width, axis)
-            gradient_axis[axis] = index_upper
-            gradient_upper_ID = self.__gridpoint_ID(*list(gradient_axis.values()))
-            gridpoint_upper = self.__data_container.get_gridpoint_by_ID(gradient_upper_ID)
-            # assemble list of property gradients for current axis
+        for i in range(len(properties)):
+            p = properties[i]
+            o = orientation[i]
             gradient_list = []
-
-            for i in range(len(properties)):
-                p = properties[i]
-                o = orientation[i]
-                gradient_list.append([((gridpoint_upper[p] - gridpoint_lower[p]) / 2), o])
-            gradient.append(gradient_list)
+            for axis, index in gradient_base.items():
+                # gradient for current axis
+                gradient_axis = gradient_base
+                # get the lower gridpoint on current axis
+                index_lower = limit_lower(index, sample_width, axis)
+                gradient_axis[axis] = index_lower
+                gradient_lower_ID = self.__gridpoint_ID(*list(gradient_axis.values()))
+                gridpoint_lower = self.__data_container.get_gridpoint_by_ID(gradient_lower_ID)
+                # get the upper gridpoint on current axis
+                index_upper = limit_upper(index, sample_width, axis)
+                gradient_axis[axis] = index_upper
+                gradient_upper_ID = self.__gridpoint_ID(*list(gradient_axis.values()))
+                gridpoint_upper = self.__data_container.get_gridpoint_by_ID(gradient_upper_ID)
+                # assemble list of property gradients for current axis
+                gradient_item = (gridpoint_upper[p] - gridpoint_lower[p]) / 2
+                gradient_list.append(gradient_item)
+            gradient.append([gradient_list, o])
         return gradient
 
     ####################################################################################################################
