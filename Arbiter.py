@@ -142,11 +142,13 @@ class Arbiter:
             gradient_axis[axis] = index_upper
             gradient_upper_ID = self.__gridpoint_ID(*list(gradient_axis.values()))
             gridpoint_upper = self.__data_container.get_gridpoint_by_ID(gradient_upper_ID)
-            print('axis: ', axis, ' lower ID: ', gradient_lower_ID, ' base ID: ', gradient_base_ID, ' upper ID: ', gradient_upper_ID)
             # assemble list of property gradients for current axis
             gradient_list = []
-            for p in properties:
-                gradient_list.append((gridpoint_upper[p] - gridpoint_lower[p]) / 2)
+
+            for i in range(len(properties)):
+                p = properties[i]
+                o = orientation[i]
+                gradient_list.append([((gridpoint_upper[p] - gridpoint_lower[p]) / 2), o])
             gradient.append(gradient_list)
         print('gradient: ', gradient)
         return gradient
