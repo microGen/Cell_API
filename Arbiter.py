@@ -150,7 +150,6 @@ class Arbiter:
                 o = orientation[i]
                 gradient_list.append([((gridpoint_upper[p] - gridpoint_lower[p]) / 2), o])
             gradient.append(gradient_list)
-        print('gradient: ', gradient)
         return gradient
 
     ####################################################################################################################

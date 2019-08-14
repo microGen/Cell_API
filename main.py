@@ -77,6 +77,8 @@ cells = a.create_cell_structure([10, 10, 10], [2, 2, 2], {'mat_density': 0.00787
 rules = [Rulebook.Density_min]
 for cell in cells:
     result = a.apply_rules(cell, rules, ['min'], [ExtPropCalc.CellDensity])
+
+    print(cell, ': Grid Density > Cell Density? ', result)
     for rule in rules:
         gradient = a.gridpoint_gradient(cell, rule)
-    #print(cell, ': Grid Density > Cell Density? ', result)
+        print('Gradient: ', gradient)

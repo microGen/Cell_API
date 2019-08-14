@@ -17,8 +17,12 @@ Implemented properties:
 --- cell density:       ExtPropCalc.CellDensity
 """
 
-class PropRule:
-    """Prototype Property Calculator / Rule"""
+class Rule:
+    """Prototype Rule"""
+
+    grid_resources = None
+    cell_resources = None
+    gradient_orientation = None
 
     def __init__(self):
         pass
@@ -48,7 +52,7 @@ class PropRule:
 
 
 
-class Density_min(PropRule):
+class Density_min(Rule):
     """Tests cell against set density: Cell density target is lower than given grid point density"""
 
     grid_resources = ('density',)
@@ -71,7 +75,7 @@ class Density_min(PropRule):
 
 
 
-class Density_max(PropRule):
+class Density_max(Rule):
     """Tests cell against set density: Cell density target is higher than given grid point density"""
 
     grid_resources = ('density',)
