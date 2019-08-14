@@ -82,3 +82,5 @@ for cell in cells:
     for rule in rules:
         gradient = a.gridpoint_gradient(cell, rule)
         print('Gradient: ', gradient)
+    gradient = gradient[0]
+    a.split_cell(cell, result, gradient)

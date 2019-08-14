@@ -11,7 +11,7 @@ Implemented properties:
 --- dimensions:         <cell>.properties('dimension')
 --- volume:             <cell>.properties('volume')
 +external properties:
---- material density:   <cell>.properties('density')
+--- material density:   <cell>.properties('mat_density')
 --- Young's modulus:    <cell>.properties('youngs')
 --- Poisson's ratio:    <cell>.properties('poisson')
 --- cell density:       ExtPropCalc.CellDensity

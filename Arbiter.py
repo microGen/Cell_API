@@ -1,5 +1,6 @@
 from numpy import inf
 from math import ceil
+from random import randint
 from statistics import mean, median
 import Factories
 from Helpers import MinMaxCoordinates
@@ -163,7 +164,31 @@ class Arbiter:
 
     ####################################################################################################################
 
-    def split_cell(self, cell, command, gradient):
+    def split_cell(self, cell, split, property_gradient):
         """If command is true, cell is split along or across gradient, depending on the rule setting. In order to split
         the cell, core properties are extracted and used as base for the new cells."""
-        pass
+
+        def find_index(coord_sys, direction):
+            """Choose split axis according to orientation given by rules"""
+            cs = [abs(axis) for axis in coord_sys]
+            if direction == 'orthogonal':
+                # Split across gradient
+                index = cs.index(max(cs))
+            elif direction == 'parallel':
+                # Split along gradient
+                index = cs.index(min(cs))
+            else:
+                # If no orientation of split available, randomly choose an axis
+                index = randint(0, 3)
+            return index
+
+        gradient = property_gradient[0]
+        orientation = property_gradient[1]
+
+        if split:
+            # split cell along / across gradient
+            dir_index = find_index(gradient, orientation)
+            print(dir_index)
+        else:
+            # convert cell to final cell
+            pass
