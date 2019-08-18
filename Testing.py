@@ -4,7 +4,7 @@
 from Cell import Cell, CellFinal
 import CellGeometry
 from Container import Container
-from Arbiter import Arbiter
+from Engine import Engine
 import Rulebook
 
 #Functions

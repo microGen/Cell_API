@@ -1,6 +1,6 @@
 from Cell import Cell, CellFinal
 from Container import Container
-from Arbiter import Arbiter
+from Engine import Engine
 
 def CELL(serial_number, location, dimensions, ext_properties, state):
     """Decides between returning a prototype cell or a final cell"""
@@ -28,14 +28,14 @@ def CONTAINER(*args):
 ########################################################################################################################
 
 
-def ARBITER(*args):
+def ENGINE(*args):
     """Returns an arbiter object."""
 
     if args == ():
-        arbiter_instance = Arbiter()
+        arbiter_instance = Engine()
     elif len(args) == 1:
-        arbiter_instance = Arbiter(args[0])
+        arbiter_instance = Engine(args[0])
     else:
-        arbiter_instance = Arbiter(args)
+        arbiter_instance = Engine(args)
 
     return arbiter_instance

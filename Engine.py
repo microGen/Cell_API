@@ -5,7 +5,7 @@ from statistics import mean, median
 import Factories
 from Helpers import MinMaxCoordinates
 
-class Arbiter:
+class Engine:
     def __init__(self, data_container, *args):
         self.__data_container = data_container
         self.__cell_serial_number = 0

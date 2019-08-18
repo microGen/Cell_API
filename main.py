@@ -4,7 +4,7 @@ import Testing
 import Rulebook
 import ExtPropCalc
 import Helpers
-from Arbiter import Arbiter
+from Engine import Engine
 
 debug_cell = False
 debug_json = False
@@ -71,7 +71,7 @@ if debug_rules:
 #print(Rulebook.Density_min.get_resources_grid())
 #print(Rulebook.Density_min.apply(cont.get_nearest_gridpoint([-432432, -42343242, 4234324]), 0.0023))
 
-a = Factories.ARBITER(cont4)
+a = Factories.ENGINE(cont4)
 cells = a.create_cell_structure([10, 10, 10], [2, 2, 2], {'mat_density': 0.00787, 'wall_thickness': 0.2})
 
 rules = [Rulebook.Density_min]
