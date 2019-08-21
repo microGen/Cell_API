@@ -168,6 +168,24 @@ class Engine:
         """If command is true, cell is split along or across gradient, depending on the rule setting. In order to split
         the cell, core properties are extracted and used as base for the new cells."""
 
+        gradient = property_gradient[0]
+        orientation = property_gradient[1]
+
+        if split:
+            # split cell along / across gradient
+            split_plane = self._build_split_plane(cell.properties('dimensions'), gradient, orientation)
+            print(split_plane)
+        else:
+            # convert cell to final cell
+            pass
+
+
+    def _build_split_plane(self, cell_dimensions, gradient, orientation):
+        """Finds greatest or smallest gradient according to orientation settings and builds a plane perpendicular to
+        gradient axis. If the cell would be split across the smallest dimension, the next greatest/smallest gradient is
+        used if both of the other cell dimensions are equal. Else, the split plane is built across the greatest
+        dimension."""
+
         def find_index(coord_sys, direction):
             """Choose split axis according to orientation given by rules"""
             cs = [abs(axis) for axis in coord_sys]
@@ -182,13 +200,19 @@ class Engine:
                 index = randint(0, 3)
             return index
 
-        gradient = property_gradient[0]
-        orientation = property_gradient[1]
+        gradient_index = find_index(gradient, orientation)
+        plane = list(filter(lambda axis: axis != gradient_index, range(3)))
+        plane_dims = list(map(lambda axis: cell_dimensions[axis], plane))
+        if cell_dimensions[gradient_index] < min(plane_dims):
+            if plane_dims[0] == plane_dims[1]:
+                # get next greatest gradient if both other axis' of cell are equal
+                gradient_index_max = find_index(gradient, 'orthogonal')
+                gradient_index_min = find_index(gradient, 'parallel')
+                med_axis = lambda axis: axis != gradient_index_min and axis != gradient_index_max
+                gradient_index = list(filter(med_axis, range(3)))[0]
+            else:
+                # get greatest dimension of cell, as else, a very slender cell will be generated
+                gradient_index = cell_dimensions.index(max(cell_dimensions))
+            plane = list(filter(lambda axis: axis != gradient_index, range(3)))
+        return plane
 
-        if split:
-            # split cell along / across gradient
-            dir_index = find_index(gradient, orientation)
-            print(dir_index)
-        else:
-            # convert cell to final cell
-            pass
