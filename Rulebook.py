@@ -17,6 +17,7 @@ Implemented properties:
 --- cell density:       ExtPropCalc.CellDensity
 """
 
+
 class Rule:
     """Prototype Rule"""
 
@@ -47,10 +48,6 @@ class Rule:
         """Returns whether splitting the cell is done orthogonal or parallel to a property gradient for given rule"""
         return cls.gradient_orientation
 
-########################################################################################################################
-########################################################################################################################
-
-
 
 class Density_min(Rule):
     """Tests cell against set density: Cell density target is lower than given grid point density"""
@@ -70,11 +67,6 @@ class Density_min(Rule):
         return grid_data > cell_data
 
 
-########################################################################################################################
-########################################################################################################################
-
-
-
 class Density_max(Rule):
     """Tests cell against set density: Cell density target is higher than given grid point density"""
 
@@ -91,7 +83,3 @@ class Density_max(Rule):
         grid_data = grid_data['density']
         cell_data = cell_data['density']
         return grid_data < cell_data
-
-
-########################################################################################################################
-########################################################################################################################

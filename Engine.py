@@ -2,8 +2,9 @@ from numpy import inf
 from math import ceil
 from random import randint
 from statistics import mean, median
-import Factories
 from Helpers import MinMaxCoordinates
+import Factories
+
 
 class Engine:
     def __init__(self, data_container, *args):
@@ -11,7 +12,6 @@ class Engine:
         self.__cell_serial_number = 0
         self.__gridpoint_ID = lambda x, y, z: str(f"{x:06}.{y:06}.{z:06}")
         pass
-
 
     def create_cell_structure(self, dims, init_cell_size, cell_properties):
         """Creates initial cell structure using arguments.
@@ -27,9 +27,6 @@ class Engine:
                     cells.append(cell)
                     self.__cell_serial_number += 1
         return cells
-
-    ####################################################################################################################
-
 
     def apply_rules(self, cell, rules, prop_options, calc):
         """Applies rules from rulebook to determine whether a cells properties are within specifications.
@@ -57,9 +54,7 @@ class Engine:
             return func(properties)
 
         # Get grid points with coordinates within - or if not available, closest to - cell
-        gridpoints = self.__get_gridpoints(cell)
-        #gradient = self.gridpoint_gradient(gridpoints)
-
+        gridpoints = self._get_gridpoints(cell)
         rule_results = []
         for i in range(len(rules)):
             # Grid points should only get resource lists from rules as they must already contain the data that the rule
@@ -95,16 +90,13 @@ class Engine:
 
         return rule_results
 
-    ####################################################################################################################
-
-
     def gridpoint_gradient(self, cell, rule, *sample_width):
         """Returns a list of gradients in X/Y/Z direction for passed gridpoints. If multiple gridpoints are passed,
         the central one serves as a basis for gradient calculation. Step width sets the offset of sample points.
         Gradient is calculated from 3 sample points: center and center +- sample_width, averaged. If sample width is not
         set, it reverts to default of 1"""
 
-        gridpoints = self.__get_gridpoints(cell)
+        gridpoints = self._get_gridpoints(cell)
         properties = [p for p in rule.get_resources_grid()]
         orientation = [o for o in rule.get_orientation()]
 
@@ -114,7 +106,6 @@ class Engine:
             sample_width = 1
         min_index = self.__data_container.get_min_index
         max_index = self.__data_container.get_max_index
-
         # limit the lower and upper indices for the gradient to the grid indices
         limit_lower = lambda cp, sw, ax: cp-sw if (cp-sw >= min_index(ax)) else min_index(ax)
         limit_upper = lambda cp, sw, ax: cp+sw if (cp+sw <= max_index(ax)) else max_index(ax)
@@ -153,16 +144,11 @@ class Engine:
             gradient.append([gradient_list, o])
         return gradient
 
-    ####################################################################################################################
-
-
-    def __get_gridpoints(self, cell):
+    def _get_gridpoints(self, cell):
         """Returns a list of gridpoints that either are located in the space occupied by the passed cell or
         - if no gridpoint is found within the cell's bounds, the closest gridpoint. Return data type is always list."""
         cell_minmax = MinMaxCoordinates.calc(cell.properties('location'), cell.properties('dimensions'))
         return self.__data_container.get_gridpoints(cell_minmax)
-
-    ####################################################################################################################
 
     def split_cell(self, cell, split, property_gradient):
         """If command is true, cell is split along or across gradient, depending on the rule setting. In order to split
@@ -173,14 +159,13 @@ class Engine:
 
         if split:
             # split cell along / across gradient
-            split_plane = self._build_split_plane(cell.properties('dimensions'), gradient, orientation)
+            split_plane = self._create_split_plane(cell.properties('dimensions'), gradient, orientation)
             print(split_plane)
         else:
             # convert cell to final cell
             pass
 
-
-    def _build_split_plane(self, cell_dimensions, gradient, orientation):
+    def _create_split_plane(self, cell_dimensions, gradient, orientation):
         """Finds greatest or smallest gradient according to orientation settings and builds a plane perpendicular to
         gradient axis. If the cell would be split across the smallest dimension, the next greatest/smallest gradient is
         used if both of the other cell dimensions are equal. Else, the split plane is built across the greatest

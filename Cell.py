@@ -2,6 +2,7 @@ from operator import itemgetter
 from CellGeometry import Vertex, Edge, Face
 from Helpers import MinMaxCoordinates
 
+
 class Cell:
     """Cell Prototype, used to build up cell structure. Finalized cells are handled by class 'CellFinal'"""
 
@@ -11,7 +12,6 @@ class Cell:
 
         self.__ID = serial_number
         self.__final = False
-
 
         # local coordinate system:
         # Z
@@ -58,21 +58,16 @@ class Cell:
                                       self.__edges[0].get_length() * self.__edges[1].get_length() * self.__edges[4].get_length()})
         self.__properties.update({'vertices': self.vertices, 'edges': self.edges, 'faces': self.faces})
 
-    ####################################################################################################################
-
-
     def split_cell(self):
+        """Returns cell properties, so that these can be transferred to sub-cells"""
         pass
 
-    ####################################################################################################################
-
-
     def ID(self):
+        """Returns the ID of the cell"""
         return self.__ID
 
-    ####################################################################################################################
-
     def vertices(self, *vertexID):
+        """Returns list of cell vertices if no argument is given, else returns vertices of given IDs."""
         if vertexID == ():
             return self.__vertices
         else:
@@ -85,10 +80,8 @@ class Cell:
                     ret_vertices.append(self.__vertices[i])
                 return ret_vertices
 
-    ####################################################################################################################
-
-
     def edges(self, *edgeID):
+        """Returns list of cell edges if no argument is given, else returns edges of given IDs."""
         if edgeID == ():
             return self.__edges
         else:
@@ -101,10 +94,8 @@ class Cell:
                     ret_edges.append(self.__edges[i])
                 return ret_edges
 
-    ####################################################################################################################
-
-
     def faces(self, *faceID):
+        """Returns list of cell faces if no argument is given, else returns faces of given IDs."""
         if faceID == ():
             return self.__faces
         else:
@@ -117,11 +108,8 @@ class Cell:
                     ret_faces.append(self.__faces[i])
                 return ret_faces
 
-
-    ####################################################################################################################
-
-
     def properties(self, *key):
+        """Returns all properties if no argument is given, else returns property with given keys"""
         if not key:
             return self.__properties
         else:
@@ -133,24 +121,14 @@ class Cell:
             else:
                 return self.__properties[key[0]]
 
-    ####################################################################################################################
-
-
     def set_final(self):
+        """Sets state of cell to final"""
         if not self.__final:
             self.__final = True
 
-    ####################################################################################################################
-
-
     def is_final(self):
+        """Returns state of cell: True if final, false if still splittable."""
         return self.__final
-
-
-
-
-########################################################################################################################
-########################################################################################################################
 
 
 class CellFinal(Cell):
@@ -159,11 +137,5 @@ class CellFinal(Cell):
     def __init__(self, serial_number, location, dimensions, ext_properties):
         super().__init__(serial_number, location, dimensions, ext_properties)
 
-    ####################################################################################################################
-
-
     def generate_paths(self):
         pass
-
-########################################################################################################################
-

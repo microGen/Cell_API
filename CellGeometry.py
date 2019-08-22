@@ -8,20 +8,13 @@ class Geometry:
         self.__location = location
         self.__geometry_ID = geometry_ID
 
-    ####################################################################################################################
-
-
     def get_location(self):
+        """Returns location of geometry object"""
         return self.__location
 
-    ####################################################################################################################
-
-
     def get_ID(self):
+        """Returns ID of geometry object"""
         return self.__geometry_ID
-
-########################################################################################################################
-########################################################################################################################
 
 
 class CompGeom(Geometry):
@@ -31,20 +24,13 @@ class CompGeom(Geometry):
         self.__vertices = verts
         super().__init__(location, geometry_ID)
 
-    ####################################################################################################################
-
-
     def get_vertices(self):
+        """Returns list of vertices comprising geometry object"""
         return self.__vertices
 
-    ####################################################################################################################
-
-
     def get_vertex_locations(self):
+        """Returns list of vertex locations from vertices comprising geometry object"""
         return [i.get_location() for i in self.__vertices]
-
-########################################################################################################################
-########################################################################################################################
 
 
 class Vertex(Geometry):
@@ -53,9 +39,6 @@ class Vertex(Geometry):
     def __init__(self, coords, geometry_ID):
         self.__position = coords
         super().__init__(self.__position, geometry_ID)
-
-########################################################################################################################
-########################################################################################################################
 
 
 class Edge(CompGeom):
@@ -67,16 +50,11 @@ class Edge(CompGeom):
         position = [divisor / 2 for divisor in list(map(add, vert1.get_location(), vert0.get_location()))]
         super().__init__([self.__vert0, self.__vert1], position, geometry_ID)
 
-    ####################################################################################################################
-
-
     def get_length(self):
+        """Returns length of edge geometry object"""
         v0_loc = self.__vert0.get_location()
         v1_loc = self.__vert1.get_location()
         return sqrt((v0_loc[0] - v1_loc[0])**2 + (v0_loc[1] - v1_loc[1])**2 + (v0_loc[2] - v1_loc[2])**2)
-
-########################################################################################################################
-########################################################################################################################
 
 
 class Face(CompGeom):
@@ -94,14 +72,10 @@ class Face(CompGeom):
         position = [divisor / 2 for divisor in list(map(add, vert2.get_location(), vert0.get_location()))]
         super().__init__([self.__vert0, self.__vert1, self.__vert2, self.__vert3], position, geometry_ID)
 
-    ####################################################################################################################
-
-
     def get_edge_lengths(self):
+        """Returns length of edges comprising face geometry object as list"""
         return [self.__edge0.get_length(), self.__edge1.get_length()]#
 
-    ####################################################################################################################
-
-
     def get_area(self):
+        """Returns area of face geometry object"""
         return self.__edge0.get_length() * self.__edge1.get_length()

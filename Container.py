@@ -19,14 +19,9 @@ class Container:
             self.__grid = None
             self.__grid_length = None
 
-    ####################################################################################################################
-
     def __del__(self):
         if self.__infile:
             self.__infile.close()
-
-
-    ####################################################################################################################
 
     def load_file(self, filename):
         if self.__infile:
@@ -39,10 +34,6 @@ class Container:
         self.__max_index = header['max_index']
         self.__grid = indata['body']
         self.__grid_length = len(self.__grid)
-
-
-    ####################################################################################################################
-
 
     def get_nearest_gridpoint(self, coordinates):
         """Calculates the Euclidean distance between 'coordinates' and grid data and returns the data of the closest
@@ -58,9 +49,6 @@ class Container:
             eucl_dist_prev = min(eucl_dist, eucl_dist_prev)
 
         return self.__grid[data_index]
-
-    ####################################################################################################################
-
 
     def get_enclosed_gridpoints(self, minmax_coordinates):
         """Returns a list of grid data of all grid elements within 'minmax_coordinates'"""
@@ -85,23 +73,14 @@ class Container:
 
         return data_list
 
-    ####################################################################################################################
-
-
     def get_gridpoint_by_ID(self, ID):
         """Returns grid point with passed ID"""
         return self.__grid[ID]
-
-    ####################################################################################################################
 
     def get_gridpoint_by_index(self, x_index, y_index, z_index):
         "Returns grid point by converting the X/Y/Z index into the ID and passing it to get_gridpoint_by_ID()"
         identifier = f"{x_index:06}.{y_index:06}.{z_index:06}"
         return self.get_gridpoint_by_ID(identifier)
-
-
-    ####################################################################################################################
-
 
     def get_gridpoints(self, minmax_coordinates):
         """Always returns grid point data. If get_enclosed_gridpoints() returns empty,
@@ -117,30 +96,20 @@ class Container:
 
         return data_list
 
-    ####################################################################################################################
-
-
     def get_max_index(self, axis):
+        """Returns the highest coordinate indices of input grid"""
         keys = {'x': 0, 'y': 1, 'z': 2}
         return self.__max_index[keys[axis]]
 
-    ####################################################################################################################
-
-
     def get_min_index(self, axis):
+        """Returns the lowest coordinate indices of input grid"""
         keys = {'x': 0, 'y': 1, 'z': 2}
         return self.__origin[keys[axis]]
-
-    ####################################################################################################################
-
 
     def dump_data(self):
         """Returns input data as a string"""
 
         return json.dumps(self.__grid)
-
-    ####################################################################################################################
-
 
     def length_of_data(self):
         """Returns length of input grid data list"""

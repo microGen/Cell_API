@@ -6,6 +6,7 @@ Works in conjunction with the rules of Rulebook.py
 
 from functools import reduce
 
+
 class Calculator:
     """Prototype Property Calculator"""
 
@@ -44,9 +45,3 @@ class CellDensity(Calculator):
         innerVolume = reduce(lambda res, i: res*i, innerHexa)
 
         return {cls.prop: (outerVolume - innerVolume) / outerVolume * ext_resources['mat_density']}
-
-
-########################################################################################################################
-########################################################################################################################
-
-

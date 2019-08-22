@@ -1,5 +1,6 @@
 from ExtPropCalc import Calculator
 
+
 class MinMaxCoordinates(Calculator):
     """Calculates the min and max coordinates from cell location and dimensions.
     Min and Max can be calculated for any given dimensions."""
