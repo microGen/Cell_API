@@ -8,9 +8,9 @@ import Factories
 
 class Engine:
     def __init__(self, data_container, *args):
-        self.__data_container = data_container
-        self.__cell_serial_number = 0
-        self.__gridpoint_ID = lambda x, y, z: str(f"{x:06}.{y:06}.{z:06}")
+        self._data_container = data_container
+        self._cell_serial_number = 0
+        self._gridpoint_ID = lambda x, y, z: str(f"{x:06}.{y:06}.{z:06}")
         pass
 
     def create_cell_structure(self, dims, init_cell_size, cell_properties):
@@ -23,9 +23,9 @@ class Engine:
         for x in range(0, dims[0]+1, init_cell_size[0]):
             for y in range(0, dims[1]+1, init_cell_size[1]):
                 for z in range(0, dims[2]+1, init_cell_size[2]):
-                    cell = Factories.CELL(self.__cell_serial_number, [x, y, z], init_cell_size, cell_properties, False)
+                    cell = Factories.CELL(self._cell_serial_number, [x, y, z], init_cell_size, cell_properties, False)
                     cells.append(cell)
-                    self.__cell_serial_number += 1
+                    self._cell_serial_number += 1
         return cells
 
     def apply_rules(self, cell, rules, prop_options, calc):
@@ -104,8 +104,8 @@ class Engine:
             sample_width = sample_width[0]
         else:
             sample_width = 1
-        min_index = self.__data_container.get_min_index
-        max_index = self.__data_container.get_max_index
+        min_index = self._data_container.get_min_index
+        max_index = self._data_container.get_max_index
         # limit the lower and upper indices for the gradient to the grid indices
         limit_lower = lambda cp, sw, ax: cp-sw if (cp-sw >= min_index(ax)) else min_index(ax)
         limit_upper = lambda cp, sw, ax: cp+sw if (cp+sw <= max_index(ax)) else max_index(ax)
@@ -118,7 +118,7 @@ class Engine:
         mid_gp_index = ceil(len(gridpoint_indices) / 2) - 1
         # ...to get the median gridpoint ID
         gradient_base = gridpoint_indices[mid_gp_index]
-        gradient_base_ID = self.__gridpoint_ID(*list(gradient_base.values()))
+        gradient_base_ID = self._gridpoint_ID(*list(gradient_base.values()))
 
         gradient = []
         for i in range(len(properties)):
@@ -131,13 +131,13 @@ class Engine:
                 # get the lower gridpoint on current axis
                 index_lower = limit_lower(index, sample_width, axis)
                 gradient_axis[axis] = index_lower
-                gradient_lower_ID = self.__gridpoint_ID(*list(gradient_axis.values()))
-                gridpoint_lower = self.__data_container.get_gridpoint_by_ID(gradient_lower_ID)
+                gradient_lower_ID = self._gridpoint_ID(*list(gradient_axis.values()))
+                gridpoint_lower = self._data_container.get_gridpoint_by_ID(gradient_lower_ID)
                 # get the upper gridpoint on current axis
                 index_upper = limit_upper(index, sample_width, axis)
                 gradient_axis[axis] = index_upper
-                gradient_upper_ID = self.__gridpoint_ID(*list(gradient_axis.values()))
-                gridpoint_upper = self.__data_container.get_gridpoint_by_ID(gradient_upper_ID)
+                gradient_upper_ID = self._gridpoint_ID(*list(gradient_axis.values()))
+                gridpoint_upper = self._data_container.get_gridpoint_by_ID(gradient_upper_ID)
                 # assemble list of property gradients for current axis
                 gradient_item = (gridpoint_upper[p] - gridpoint_lower[p]) / 2
                 gradient_list.append(gradient_item)
@@ -148,7 +148,7 @@ class Engine:
         """Returns a list of gridpoints that either are located in the space occupied by the passed cell or
         - if no gridpoint is found within the cell's bounds, the closest gridpoint. Return data type is always list."""
         cell_minmax = MinMaxCoordinates.calc(cell.properties('location'), cell.properties('dimensions'))
-        return self.__data_container.get_gridpoints(cell_minmax)
+        return self._data_container.get_gridpoints(cell_minmax)
 
     def split_cell(self, cell, rule_result, property_gradient):
         """If command is true, cell is split along or across gradient, depending on the rule setting. In order to split
@@ -163,12 +163,35 @@ class Engine:
             print("Cell state final: ", cell.is_final())
         else:
             # split cell along / across gradient
-            split_plane = self._create_split_plane(cell.properties('dimensions'), gradient, orientation)
-            print(split_plane)
-            cell_data = cell.properties()
-            print(cell_data)
+            split_axis = self._create_split_plane(cell.properties('dimensions'), gradient, orientation, 'axis')
+            print(split_axis)
+            cell_ext_data = cell.ext_properties()
+            cell_loc = cell.geometry('location')
+            cell_dims = cell.geometry('dimensions')
+            cell_id = cell.ID()
+            print('Cell ID: ', cell_id)
+            print(cell_ext_data)
+            print('Cell dims:', cell_dims)
+            new_dims = cell_dims.copy()
+            new_dims[split_axis] /= 2
+            offset = new_dims[split_axis] / 2
+            print('New dimensions: ', new_dims, ', offset: ', offset)
+            new_loc_base = cell_loc.copy()
+            new_loc_0 = cell_loc.copy()
+            new_loc_0[split_axis] -= offset
+            new_loc_1 = cell_loc.copy()
+            new_loc_1[split_axis] += offset
+            print('Old location: ', cell_loc)
+            cell_n0 = Factories.CELL(cell_id, new_loc_0, new_dims, cell_ext_data, False)
+            cell_n1 = Factories.CELL(self._cell_serial_number, new_loc_1, new_dims, cell_ext_data, False)
+            self._cell_serial_number += 1
+            print('New cells: ',
+                  cell_n0, ' ID: ', cell_n0.ID(), ' @ ', cell_n0.geometry('location'),
+                  ', size: ', cell_n0.geometry('dimensions'),
+                  ' / ', cell_n1, ' ID: ', cell_n1.ID(), ' @ ', cell_n1.geometry('location'),
+                  ', size: ', cell_n1.geometry('dimensions'))
 
-    def _create_split_plane(self, cell_dimensions, gradient, orientation):
+    def _create_split_plane(self, cell_dimensions, gradient, orientation, return_format):
         """Finds greatest or smallest gradient according to orientation settings and builds a plane perpendicular to
         gradient axis. If the cell would be split across the smallest dimension, the next greatest/smallest gradient is
         used if both of the other cell dimensions are equal. Else, the split plane is built across the greatest
@@ -202,5 +225,13 @@ class Engine:
                 # get greatest dimension of cell, as else, a very slender cell will be generated
                 gradient_index = cell_dimensions.index(max(cell_dimensions))
             plane = list(filter(lambda axis: axis != gradient_index, range(3)))
-        return plane
 
+        # either return axis across which to split cell or return split plane
+        return_format = return_format.lower()
+        if return_format == 'axis':
+            return gradient_index
+        elif return_format == 'plane':
+            return plane
+        else:
+            # future development?
+            pass

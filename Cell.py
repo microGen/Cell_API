@@ -7,10 +7,9 @@ class Cell:
     """Cell Prototype, used to build up cell structure. Finalized cells are handled by class 'CellFinal'"""
 
     def __init__(self, serial_number, location, dimensions, ext_properties):
-        self._properties = {'location': location, 'dimensions': dimensions}
-        self._properties.update(ext_properties)
-
         self._ID = serial_number
+        self._geometry = {'location': location, 'dimensions': dimensions}
+        self._ext_properties = ext_properties
         self._final = False
 
         # local coordinate system:
@@ -24,7 +23,7 @@ class Cell:
         #     edge0:      v0->v1,        |edge4:      v0->v4,        |edge8:      v4->v5
         #     face0:      v0, v1, v2, v3 |face1:      v0, v1, v4, v5 |face5:      v4, v5, v6, v7
 
-        self._minmax = MinMaxCoordinates.calc(self._properties['location'], self._properties['dimensions'])
+        self._minmax = MinMaxCoordinates.calc(self._geometry['location'], self._geometry['dimensions'])
 
         #list of coordinates for cell vertices
         c_list = [[self._minmax[0][0], self._minmax[1][0], self._minmax[2][0]], \
@@ -54,9 +53,9 @@ class Cell:
                                  self._vertices[i + 4], i + 1) for i in range(4)])
         self._faces.append(Face(self._vertices[4], self._vertices[5], self._vertices[6], self._vertices[7], 5))
 
-        self._properties.update({'volume': \
+        self._geometry.update({'volume': \
                                      self._edges[0].get_length() * self._edges[1].get_length() * self._edges[4].get_length()})
-        self._properties.update({'vertices': self.vertices, 'edges': self.edges, 'faces': self.faces})
+        self._geometry.update({'vertices': self.vertices, 'edges': self.edges, 'faces': self.faces})
 
     def split(self):
         """Returns cell properties, so that these can be transferred to sub-cells"""
@@ -110,19 +109,57 @@ class Cell:
 
     def properties(self, *key):
         """Returns all properties if no argument is given, else returns property with given keys"""
+
+        properties = {**self._geometry, **self._ext_properties}
+
         if not key:
-            return self._properties
+            return properties
         else:
             if len(key) > 1:
                 props = []
-                for i in key:
-                    props.append(self._properties[i])
+                for k in key:
+                    props.append(properties[k])
                 return props
             else:
-                return self._properties[key[0]]
+                return properties[key[0]]
+
+    def geometry(self, *key):
+        """Returns all cell geometry features if no argument is given, else returns following geometry featueres:
+        - location [x, y, z]
+        - dimensions [x, y, z]
+        - volume
+        - vertex getter method
+        - edge getter method
+        - face getter method"""
+
+        if not key:
+            return self._geometry
+        else:
+            if len(key) > 1:
+                geo = []
+                for k in key:
+                    geo.append(self._geometry[k])
+                return c_props
+            else:
+                return self._geometry[key[0]]
+
+    def ext_properties(self, *key):
+        """Returns all externally given properties if no argument is given, else returns property with given keys"""
+
+        if not key:
+            return self._ext_properties
+        else:
+            if len(key) > 1:
+                props = []
+                for k in key:
+                    props.append(self._ext_properties[k])
+                return props
+            else:
+                return self._ext_properties[key[0]]
 
     def set_final(self):
         """Sets state of cell to final"""
+
         if not self._final:
             self._final = True
 

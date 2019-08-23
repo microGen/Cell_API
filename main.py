@@ -88,4 +88,4 @@ for cell in cells:
     eng.split_cell(cell, result0, gradient)
 
 print('\nBUILD SPLIT PLANE:')
-print(eng._create_split_plane([3, 2, 1], [1, 0.5, 0], 'parallel'))
+print(eng._create_split_plane([3, 2, 1], [1, 0.5, 0], 'parallel', 'plane'))
