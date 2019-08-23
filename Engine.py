@@ -150,20 +150,23 @@ class Engine:
         cell_minmax = MinMaxCoordinates.calc(cell.properties('location'), cell.properties('dimensions'))
         return self.__data_container.get_gridpoints(cell_minmax)
 
-    def split_cell(self, cell, split, property_gradient):
+    def split_cell(self, cell, rule_result, property_gradient):
         """If command is true, cell is split along or across gradient, depending on the rule setting. In order to split
         the cell, core properties are extracted and used as base for the new cells."""
 
         gradient = property_gradient[0]
         orientation = property_gradient[1]
 
-        if split:
+        if rule_result == True:
+            # convert cell to final cell
+            cell.set_final()
+            print("Cell state final: ", cell.is_final())
+        else:
             # split cell along / across gradient
             split_plane = self._create_split_plane(cell.properties('dimensions'), gradient, orientation)
             print(split_plane)
-        else:
-            # convert cell to final cell
-            pass
+            cell_data = cell.properties()
+            print(cell_data)
 
     def _create_split_plane(self, cell_dimensions, gradient, orientation):
         """Finds greatest or smallest gradient according to orientation settings and builds a plane perpendicular to

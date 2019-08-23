@@ -84,7 +84,8 @@ for cell in cells:
         gradient = eng.gridpoint_gradient(cell, rule)
         print('Gradient: ', gradient)
     gradient = gradient[0]
-    eng.split_cell(cell, result, gradient)
+    result0 = result[0]
+    eng.split_cell(cell, result0, gradient)
 
 print('\nBUILD SPLIT PLANE:')
 print(eng._create_split_plane([3, 2, 1], [1, 0.5, 0], 'parallel'))
