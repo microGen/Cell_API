@@ -73,19 +73,22 @@ if debug_rules:
 #print(Rulebook.Density_min.apply(cont.get_nearest_gridpoint([-432432, -42343242, 4234324]), 0.0023))
 
 eng = Factories.ENGINE(cont4)
-cells = eng.create_cell_structure([10, 10, 10], [2, 2, 2], {'mat_density': 0.00787, 'wall_thickness': 0.2})
+eng.create_cell_structure([10, 10, 10], [2, 2, 2], {'mat_density': 0.00787, 'wall_thickness': 0.2})
 
 rules = [Rulebook.Density_min]
-for cell in cells:
+cell_max_index = eng.next_cell_serial_num()
+cells = eng.get_cells()
+for cell in cells[:cell_max_index]:
     result = eng.apply_rules(cell, rules, ['min'], [ExtPropCalc.CellDensity])
-    print('\n')
-    print(cell, ': Grid Density > Cell Density? ', result)
+    #print('\n')
+    #print(cell, ' ID: ', cell.ID(), ': Grid Density > Cell Density? ', result)
     for rule in rules:
         gradient = eng.gridpoint_gradient(cell, rule)
-        print('Gradient: ', gradient)
+        #print('Gradient: ', gradient)
     gradient = gradient[0]
     result0 = result[0]
-    eng.split_cell(cell, result0, gradient)
+    cells_after_split = eng.split_cell(cell, result0, gradient)
 
-print('\nBUILD SPLIT PLANE:')
-print(eng._create_split_plane([3, 2, 1], [1, 0.5, 0], 'parallel', 'plane'))
+print('Cells after split:')
+for c in cells:
+    print('ID: ', c.ID(), '\tlocation: ', c.geometry('location'), '\tdimensions: ', c.geometry('dimensions'))

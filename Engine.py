@@ -7,11 +7,18 @@ import Factories
 
 
 class Engine:
-    def __init__(self, data_container, *args):
+    def __init__(self, data_container):
         self._data_container = data_container
         self._cell_serial_number = 0
+        self._cells = []
+        self._cell_buffer = []
         self._gridpoint_ID = lambda x, y, z: str(f"{x:06}.{y:06}.{z:06}")
         pass
+
+    def next_cell_serial_num(self):
+        """Returns the first free serial number in list of cells"""
+
+        return self._cell_serial_number
 
     def create_cell_structure(self, dims, init_cell_size, cell_properties):
         """Creates initial cell structure using arguments.
@@ -19,14 +26,29 @@ class Engine:
         init_cell_size: [x, y, z] - initial cell size
         cell_properties: dictionary - properties transmitted by the cell data input file"""
 
-        cells = []
+        if len(self._cells) > 0:
+            self._cells.clear()
         for x in range(0, dims[0]+1, init_cell_size[0]):
             for y in range(0, dims[1]+1, init_cell_size[1]):
                 for z in range(0, dims[2]+1, init_cell_size[2]):
                     cell = Factories.CELL(self._cell_serial_number, [x, y, z], init_cell_size, cell_properties, False)
-                    cells.append(cell)
+                    self._cells.append(cell)
                     self._cell_serial_number += 1
-        return cells
+        return self._cells
+
+    def get_cells(self, *ID):
+        """Returns list of cells if no ID is given, else returns cell of given ID"""
+
+        if not ID:
+            return self._cells
+        else:
+            ID = ID[0]
+            for cell in self._cells:
+                if cell.ID() == ID:
+                    return cell
+                else:
+                    print('No cell of ID exists')
+
 
     def apply_rules(self, cell, rules, prop_options, calc):
         """Applies rules from rulebook to determine whether a cells properties are within specifications.
@@ -118,7 +140,7 @@ class Engine:
         mid_gp_index = ceil(len(gridpoint_indices) / 2) - 1
         # ...to get the median gridpoint ID
         gradient_base = gridpoint_indices[mid_gp_index]
-        gradient_base_ID = self._gridpoint_ID(*list(gradient_base.values()))
+        # gradient_base_ID = self._gridpoint_ID(*list(gradient_base.values()))
 
         gradient = []
         for i in range(len(properties)):
@@ -160,36 +182,28 @@ class Engine:
         if rule_result == True:
             # convert cell to final cell
             cell.set_final()
-            print("Cell state final: ", cell.is_final())
+            return cell
         else:
             # split cell along / across gradient
             split_axis = self._create_split_plane(cell.properties('dimensions'), gradient, orientation, 'axis')
-            print(split_axis)
             cell_ext_data = cell.ext_properties()
             cell_loc = cell.geometry('location')
             cell_dims = cell.geometry('dimensions')
             cell_id = cell.ID()
-            print('Cell ID: ', cell_id)
-            print(cell_ext_data)
-            print('Cell dims:', cell_dims)
             new_dims = cell_dims.copy()
             new_dims[split_axis] /= 2
             offset = new_dims[split_axis] / 2
-            print('New dimensions: ', new_dims, ', offset: ', offset)
             new_loc_base = cell_loc.copy()
             new_loc_0 = cell_loc.copy()
             new_loc_0[split_axis] -= offset
             new_loc_1 = cell_loc.copy()
             new_loc_1[split_axis] += offset
-            print('Old location: ', cell_loc)
             cell_n0 = Factories.CELL(cell_id, new_loc_0, new_dims, cell_ext_data, False)
             cell_n1 = Factories.CELL(self._cell_serial_number, new_loc_1, new_dims, cell_ext_data, False)
             self._cell_serial_number += 1
-            print('New cells: ',
-                  cell_n0, ' ID: ', cell_n0.ID(), ' @ ', cell_n0.geometry('location'),
-                  ', size: ', cell_n0.geometry('dimensions'),
-                  ' / ', cell_n1, ' ID: ', cell_n1.ID(), ' @ ', cell_n1.geometry('location'),
-                  ', size: ', cell_n1.geometry('dimensions'))
+            self._cells[cell_id] = cell_n0
+            self._cells.append(cell_n1)
+            return [cell_n0, cell_n1]
 
     def _create_split_plane(self, cell_dimensions, gradient, orientation, return_format):
         """Finds greatest or smallest gradient according to orientation settings and builds a plane perpendicular to
