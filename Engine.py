@@ -11,7 +11,6 @@ class Engine:
         self._data_container = data_container
         self._cell_serial_number = 0
         self._cells = []
-        self._cell_buffer = []
         self._gridpoint_ID = lambda x, y, z: str(f"{x:06}.{y:06}.{z:06}")
         pass
 
@@ -185,19 +184,22 @@ class Engine:
             return cell
         else:
             # split cell along / across gradient
-            split_axis = self._create_split_plane(cell.properties('dimensions'), gradient, orientation, 'axis')
+            split_axis = self._create_split_plane(cell.properties('dimensions'), gradient, orientation, 'axis', True)
+            # get all necessary data to create sub cells
             cell_ext_data = cell.ext_properties()
             cell_loc = cell.geometry('location')
             cell_dims = cell.geometry('dimensions')
             cell_id = cell.ID()
+            # calculate dimensions of sub cells
             new_dims = cell_dims.copy()
             new_dims[split_axis] /= 2
             offset = new_dims[split_axis] / 2
-            new_loc_base = cell_loc.copy()
+            # calculate locations for sub cells
             new_loc_0 = cell_loc.copy()
             new_loc_0[split_axis] -= offset
             new_loc_1 = cell_loc.copy()
             new_loc_1[split_axis] += offset
+            # create sub cells
             cell_n0 = Factories.CELL(cell_id, new_loc_0, new_dims, cell_ext_data, False)
             cell_n1 = Factories.CELL(self._cell_serial_number, new_loc_1, new_dims, cell_ext_data, False)
             self._cell_serial_number += 1
@@ -205,30 +207,25 @@ class Engine:
             self._cells.append(cell_n1)
             return [cell_n0, cell_n1]
 
-    def _create_split_plane(self, cell_dimensions, gradient, orientation, return_format):
+    def _create_split_plane(self, cell_dimensions, gradient, orientation, return_format, ortho):
         """Finds greatest or smallest gradient according to orientation settings and builds a plane perpendicular to
         gradient axis. If the cell would be split across the smallest dimension, the next greatest/smallest gradient is
         used if both of the other cell dimensions are equal. Else, the split plane is built across the greatest
         dimension."""
 
-        def find_index(coord_sys, direction):
-            """Choose split axis according to orientation given by rules"""
-            cs = [abs(axis) for axis in coord_sys]
-            if direction == 'orthogonal':
-                # Split across gradient
-                index = cs.index(max(cs))
-            elif direction == 'parallel':
-                # Split along gradient
-                index = cs.index(min(cs))
-            else:
-                # If no orientation of split available, randomly choose an axis
-                index = randint(0, 3)
-            return index
+        build_plane = lambda grad_index: list(filter(lambda axis: axis != grad_index, range(3)))
 
-        gradient_index = find_index(gradient, orientation)
-        plane = list(filter(lambda axis: axis != gradient_index, range(3)))
+        gradient_index = self._find_index(gradient, orientation)
+        plane = build_plane(gradient_index)
+
+        if ortho:
+            gradient_index = self._make_orthotropic(cell_dimensions, plane, gradient, gradient_index)
+            plane = build_plane(gradient_index)
+
+        '''
         plane_dims = list(map(lambda axis: cell_dimensions[axis], plane))
-        if cell_dimensions[gradient_index] < min(plane_dims):
+
+        if cell_dimensions[gradient_index] <= min(plane_dims):
             if plane_dims[0] == plane_dims[1]:
                 # get next greatest gradient if both other axis' of cell are equal
                 gradient_index_max = find_index(gradient, 'orthogonal')
@@ -238,8 +235,8 @@ class Engine:
             else:
                 # get greatest dimension of cell, as else, a very slender cell will be generated
                 gradient_index = cell_dimensions.index(max(cell_dimensions))
-            plane = list(filter(lambda axis: axis != gradient_index, range(3)))
-
+            plane = build_plane(gradient_index)
+        '''
         # either return axis across which to split cell or return split plane
         return_format = return_format.lower()
         if return_format == 'axis':
@@ -249,3 +246,36 @@ class Engine:
         else:
             # future development?
             pass
+
+    def _make_orthotropic(self, cell_dims, proto_plane, grad, grad_index):
+        """Returns a split plane that splits the cell across the greatest dimension if split plane was built across a
+        lesser dimension. Else returns the passed split plane. Attempts to create a cell structure that does not stray
+        too much from orthotropic geometric properties."""
+
+        plane_dims = list(map(lambda axis: cell_dims[axis], proto_plane))
+
+        if cell_dims[grad_index] <= min(plane_dims):
+            if plane_dims[0] == plane_dims[1]:
+                # get next greatest gradient if both other axis' of cell are equal
+                grad_index_max = self._find_index(grad, 'orthogonal')
+                grad_index_min = self._find_index(grad, 'parallel')
+                med_axis = lambda axis: axis != grad_index_min and axis != grad_index_max
+                grad_index = list(filter(med_axis, range(3)))[0]
+            else:
+                # get greatest dimension of cell, as else, a very slender cell might be generated
+                grad_index = cell_dims.index(max(cell_dims))
+        return grad_index
+
+    def _find_index(self, coord_sys, direction):
+        """Choose split axis according to orientation given by rules"""
+        cs = [abs(axis) for axis in coord_sys]
+        if direction == 'orthogonal':
+            # Split across gradient
+            index = cs.index(max(cs))
+        elif direction == 'parallel':
+            # Split along gradient
+            index = cs.index(min(cs))
+        else:
+            # If no orientation of split available, randomly choose an axis
+            index = randint(0, 3)
+        return index

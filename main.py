@@ -20,6 +20,7 @@ Testing.helpers_unit_test()
 
 loc = [1, 1, 1]
 dim = [2, 2, 2]
+iterations = 6
 
 c = Factories.CELL(3, loc, dim, {'mat_density': 0.00787, 'wall_thickness': 0.2}, False)
 #cont0 = Factories.CONTAINER("json_test_input.txt")
@@ -73,22 +74,46 @@ if debug_rules:
 #print(Rulebook.Density_min.apply(cont.get_nearest_gridpoint([-432432, -42343242, 4234324]), 0.0023))
 
 eng = Factories.ENGINE(cont4)
-eng.create_cell_structure([10, 10, 10], [2, 2, 2], {'mat_density': 0.00787, 'wall_thickness': 0.2})
+eng.create_cell_structure([10, 10, 10], [5, 5, 5], {'mat_density': 0.00787, 'wall_thickness': 0.2})
 
-rules = [Rulebook.Density_min]
-cell_max_index = eng.next_cell_serial_num()
-cells = eng.get_cells()
-for cell in cells[:cell_max_index]:
-    result = eng.apply_rules(cell, rules, ['min'], [ExtPropCalc.CellDensity])
-    #print('\n')
-    #print(cell, ' ID: ', cell.ID(), ': Grid Density > Cell Density? ', result)
-    for rule in rules:
-        gradient = eng.gridpoint_gradient(cell, rule)
-        #print('Gradient: ', gradient)
-    gradient = gradient[0]
-    result0 = result[0]
-    cells_after_split = eng.split_cell(cell, result0, gradient)
+rules = [Rulebook.Density_max]
 
-print('Cells after split:')
-for c in cells:
-    print('ID: ', c.ID(), '\tlocation: ', c.geometry('location'), '\tdimensions: ', c.geometry('dimensions'))
+calc = ExtPropCalc.CellDensity
+calc_resources = calc.get_resources_cell()
+
+for i in range(iterations):
+    cell_max_index = eng.next_cell_serial_num()
+    cells = eng.get_cells()
+    for cell in cells[:cell_max_index]:
+        result = eng.apply_rules(cell, rules, ['min'], [ExtPropCalc.CellDensity])
+        #print('\n')
+        #print(cell, ' ID: ', cell.ID(), ': Grid Density > Cell Density? ', result)
+        for rule in rules:
+            gradient = eng.gridpoint_gradient(cell, rule)
+            #print('Gradient: ', gradient)
+        gradient = gradient[0]
+        result0 = result[0]
+        cells_after_split = eng.split_cell(cell, result0, gradient)
+
+    outfile_name = f"cell_structure{i:02}.txt"
+    outfile = open(outfile_name, 'w')
+    #print('\nCells after split ', i, ':')
+    for c in cells:
+        cell_properties = {cr: c.properties(cr) for cr in calc_resources}
+        cell_resources = calc.calc(cell_properties)
+        gridpoints = eng._get_gridpoints(c)
+        outstring = f"ID: {c.ID()}\tfinal: {c.is_final()}\tlocation: {c.geometry('location')}\tdimensions: {c.geometry('dimensions')}\n"
+        out_density = f"Cell density: {cell_resources}\tgridpoint density: {gridpoints[0]['density']}\n"
+        outfile.write(outstring)
+        outfile.write(out_density)
+        #print('ID: ', c.ID(), '\tfinal: ', c.is_final(), '\tlocation: ', c.geometry('location'), '\tdimensions: ', c.geometry('dimensions'))
+
+    outfile.close()
+
+
+#eng._create_split_plane([2, 2, 2], [1, 0, 0], 'orthogonal', 'axis')
+testcell = Factories.CELL(1, [0, 0, 0], [2, 1.0, 1.0], {'mat_density': 0.00787, 'wall_thickness': 0.2}, False)
+testcell_result = eng.split_cell(testcell, False, [[1, 0, 0], 'orthogonal'])
+if type(testcell_result) == list:
+    for tcr in testcell_result:
+        print(tcr.geometry('dimensions'))
