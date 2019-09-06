@@ -42,3 +42,20 @@ def frange(start, stop, step = 1, *decimals):
         else:
             yield start
         start += step
+
+
+def pick_sample(sample_set, option):
+    """Handles picking of one sample out of a set.
+    Supported options are min, max, arithmetic mean (amn), median (med)"""
+
+    def prop_min(set):
+        return min(set)
+    def prop_max(set):
+        return max(set)
+    def prop_amn(set):
+        return mean(set)
+    def prop_med(set):
+        return median(set)
+    option_list = {'min': prop_min, 'max': prop_max, 'amn': prop_amn, 'med': prop_med}
+    func = option_list.get(option)
+    return func(sample_set)

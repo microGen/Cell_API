@@ -8,10 +8,13 @@ class Container:
         if filename != ():
             self._infile = open(filename[0], 'r')
             indata = json.load(self._infile)
-            header = indata['header']
-            self._origin = header['origin']
-            self._dimensions = header['dimensions']
-            self._max_index = header['max_index']
+            self._header = indata['header']
+            #self._origin = header['origin']
+            #self._dimensions = header['dimensions']
+            #self._max_index = header['max_index']
+            #self._cell_dimensions = header['cell_dimensions']
+            #self._cell_default_properties = header['default_properties']
+            #self._min_cell_dimensions = header['min_cell_dimensions']
             self._grid = indata['body']
             self._grid_length = len(self._grid)
         else:
@@ -28,7 +31,7 @@ class Container:
             self._infile.close()
         self._infile = open(filename, 'r')
         indata = json.load(self._infile)
-        header = indata['header']
+        self._header = indata['header']
         self._origin = header['origin']
         self._dimensions = header['dimensions']
         self._max_index = header['max_index']
@@ -75,10 +78,12 @@ class Container:
 
     def get_gridpoint_by_ID(self, ID):
         """Returns grid point with passed ID"""
+
         return self._grid[ID]
 
     def get_gridpoint_by_index(self, x_index, y_index, z_index):
         "Returns grid point by converting the X/Y/Z index into the ID and passing it to get_gridpoint_by_ID()"
+
         identifier = f"{x_index:06}.{y_index:06}.{z_index:06}"
         return self.get_gridpoint_by_ID(identifier)
 
@@ -96,15 +101,62 @@ class Container:
 
         return data_list
 
-    def get_max_index(self, axis):
-        """Returns the highest coordinate indices of input grid"""
-        keys = {'x': 0, 'y': 1, 'z': 2}
-        return self._max_index[keys[axis]]
+    def get_max_index(self, axis = None):
+        """Returns the highest coordinate indices of input grid per axis.
+        If no axis is given, returns all 3 indices as list"""
 
-    def get_min_index(self, axis):
-        """Returns the lowest coordinate indices of input grid"""
+        max_index = self._header['max_index']
         keys = {'x': 0, 'y': 1, 'z': 2}
-        return self._origin[keys[axis]]
+        if axis:
+            return max_index[keys[axis]]
+        else:
+            return max_index
+
+    def get_min_index(self, axis = None):
+        """Returns the lowest coordinate indices of input grid per axis.
+        If no axis is given, returns all 3 indices as list"""
+
+        min_index = self._header['origin']
+        keys = {'x': 0, 'y': 1, 'z': 2}
+        if axis:
+            return min_index[keys[axis]]
+        else:
+            return min_index
+
+    def get_structure_dims(self, axis = None):
+        """Returns initial cell structure dimensions. If no axis is given, returns all 3 dimensions as list"""
+
+        dimensions = self._header['dimensions']
+        keys = {'x': 0, 'y': 1, 'z': 2}
+        if axis:
+            return dimensions[keys[axis]]
+        else: return dimensions
+
+    def get_cell_dims(self, axis = None):
+        """Returns initial cell size per axis. If no axis is given, returns all 3 dimensions as list"""
+
+        cell_dimensions = self._header['cell_dimensions']
+        keys = {'x': 0, 'y': 1, 'z': 2}
+        if axis:
+            return cell_dimensions[keys[axis]]
+        else:
+            return cell_dimensions
+
+    def get_defaults(self):
+        """Returns cell default properties"""
+
+        return self._header['default_properties']
+
+    def get_min_cell_dimensions(self, axis = None):
+        """Returns minimum permittable cell dimensions. If no axis is given, returns all 3 dimensions as list"""
+
+        min_cell_dimensions = self._header['min_cell_dimensions']
+        keys = {'x': 0, 'y': 1, 'z': 2}
+        if axis:
+            return min_cell_dimensions[keys[axis]]
+        else:
+            return min_cell_dimensions
+
 
     def dump_data(self):
         """Returns input data as a string"""

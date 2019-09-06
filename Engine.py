@@ -2,7 +2,7 @@ from numpy import inf
 from math import ceil
 from random import randint
 from statistics import mean, median
-from Helpers import MinMaxCoordinates, frange
+from Helpers import MinMaxCoordinates, frange, pick_sample
 import Factories
 
 
@@ -19,11 +19,18 @@ class Engine:
 
         return self._cell_serial_number
 
-    def create_cell_structure(self, dims, init_cell_size, cell_properties):
+    def create_cell_structure(self, dims = None, init_cell_size = None, cell_properties = None):
         """Creates initial cell structure using arguments.
         dims: [x, y, z] - maximum dimensions, origin is [0, 0, 0]
         init_cell_size: [x, y, z] - initial cell size
         cell_properties: dictionary - properties transmitted by the cell data input file"""
+
+        if dims == None:
+            dims = self._data_container.get_structure_dims()
+        if init_cell_size == None:
+            init_cell_size = self._data_container.get_cell_dims()
+        if cell_properties == None:
+            cell_properties = self._data_container.get_defaults()
 
         if len(self._cells) > 0:
             self._cells.clear()
@@ -59,21 +66,6 @@ class Engine:
             necessary calculations. Must be a list of the same length as rules. If no calculator is needed, the list
             must be 0"""
 
-        # Handles choice of options for extraction of grid point properties.
-        # Supported options are min, max, arithmetic mean (amn), median (med)
-        def calc_prop_opt(properties, option):
-            def prop_min(props):
-                return min(props)
-            def prop_max(props):
-                return max(props)
-            def prop_amn(props):
-                return mean(props)
-            def prop_med(props):
-                return median(props)
-            option_list = {'min': prop_min, 'max': prop_max, 'amn': prop_amn, 'med': prop_med}
-            func = option_list.get(option)
-            return func(properties)
-
         # Get grid points with coordinates within - or if not available, closest to - cell
         gridpoints = self._get_gridpoints(cell)
         rule_results = []
@@ -105,7 +97,7 @@ class Engine:
             grid_resources = {}
             for resource in rule_resources_grid:
                 grid_data = [gr[resource] for gr in grid_resource_list]
-                grid_resources.update({resource: calc_prop_opt(grid_data, prop_options[i])})
+                grid_resources.update({resource: pick_sample(grid_data, prop_options[i])})
             rule_results.append(rules[i].apply(grid_resources, cell_resources))
             #print('Grid resources: ', grid_resources, ' Cell resources: ', cell_resources)
 

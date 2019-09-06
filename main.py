@@ -13,7 +13,7 @@ debug_rules = False
 print('Testing stage for Cell API\n')
 
 Testing.cell_unit_test()
-Testing.container_unit_test()
+#Testing.container_unit_test()
 Testing.prop_calc_unit_test()
 Testing.rulebook_unit_test()
 Testing.helpers_unit_test()
@@ -24,9 +24,9 @@ iterations = 6
 
 c = Factories.CELL(3, loc, dim, {'mat_density': 0.00787, 'wall_thickness': 0.2}, False)
 #cont0 = Factories.CONTAINER("json_test_input.txt")
-cont1 = Factories.CONTAINER("grid_data.json")
-cont2 = Factories.CONTAINER("grid_data_2.json")
-cont3 = Factories.CONTAINER("grid_data_3.json")
+#cont1 = Factories.CONTAINER("grid_data.json")
+#cont2 = Factories.CONTAINER("grid_data_2.json")
+#cont3 = Factories.CONTAINER("grid_data_3.json")
 cont4 = Factories.CONTAINER("grid_data_4.json")
 
 # cells = []
@@ -74,13 +74,15 @@ if debug_rules:
 #print(Rulebook.Density_min.apply(cont.get_nearest_gridpoint([-432432, -42343242, 4234324]), 0.0023))
 
 eng = Factories.ENGINE(cont4)
-eng.create_cell_structure([10, 10, 10], [5, 5, 5], {'mat_density': 0.00787, 'wall_thickness': 0.2})
+#eng.create_cell_structure([10, 10, 10], [5, 5, 5], {'mat_density': 0.00787, 'wall_thickness': 0.2})
+eng.create_cell_structure()
 
 rules = [Rulebook.Density_max]
 
 calc = ExtPropCalc.CellDensity
 calc_resources = calc.get_resources_cell()
 
+# initial cells
 cells = eng.get_cells()
 outfile_name = f"cell_structure_base.txt"
 outfile = open(outfile_name, 'w')
@@ -88,12 +90,15 @@ for c in cells:
     cell_properties = {cr: c.properties(cr) for cr in calc_resources}
     cell_resources = calc.calc(cell_properties)
     gridpoints = eng._get_gridpoints(c)
+    gp_density = [gp['density'] for gp in gridpoints]
+    single_gp = Helpers.pick_sample(gp_density, 'min')
     outstring = f"ID: {c.ID()}\tfinal: {c.is_final()}\tlocation: {c.geometry('location')}\tdimensions: {c.geometry('dimensions')}\n"
-    out_density = f"Cell density: {cell_resources}\tgridpoint density: {gridpoints[0]['density']}\n"
+    out_density = f"Cell density: {cell_resources}\tgridpoint density: {single_gp}\n"
     outfile.write(outstring)
     outfile.write(out_density)
 outfile.close()
 
+# evolving cell structure
 for i in range(iterations):
     cell_max_index = eng.next_cell_serial_num()
     cells = eng.get_cells()
@@ -115,18 +120,11 @@ for i in range(iterations):
         cell_properties = {cr: c.properties(cr) for cr in calc_resources}
         cell_resources = calc.calc(cell_properties)
         gridpoints = eng._get_gridpoints(c)
+        gp_density = [gp['density'] for gp in gridpoints]
+        single_gp = Helpers.pick_sample(gp_density, 'min')
         outstring = f"ID: {c.ID()}\tfinal: {c.is_final()}\tlocation: {c.geometry('location')}\tdimensions: {c.geometry('dimensions')}\n"
-        out_density = f"Cell density: {cell_resources}\tgridpoint density: {gridpoints[0]['density']}\n"
+        out_density = f"Cell density: {cell_resources}\tgridpoint density: {single_gp}\n"
         outfile.write(outstring)
         outfile.write(out_density)
         #print('ID: ', c.ID(), '\tfinal: ', c.is_final(), '\tlocation: ', c.geometry('location'), '\tdimensions: ', c.geometry('dimensions'))
-
     outfile.close()
-
-
-#eng._create_split_plane([2, 2, 2], [1, 0, 0], 'orthogonal', 'axis')
-testcell = Factories.CELL(1, [0, 0, 0], [2, 1.0, 1.0], {'mat_density': 0.00787, 'wall_thickness': 0.2}, False)
-testcell_result = eng.split_cell(testcell, False, [[1, 0, 0], 'orthogonal'])
-if type(testcell_result) == list:
-    for tcr in testcell_result:
-        print(tcr.geometry('dimensions'))
