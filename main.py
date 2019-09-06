@@ -81,6 +81,19 @@ rules = [Rulebook.Density_max]
 calc = ExtPropCalc.CellDensity
 calc_resources = calc.get_resources_cell()
 
+cells = eng.get_cells()
+outfile_name = f"cell_structure_base.txt"
+outfile = open(outfile_name, 'w')
+for c in cells:
+    cell_properties = {cr: c.properties(cr) for cr in calc_resources}
+    cell_resources = calc.calc(cell_properties)
+    gridpoints = eng._get_gridpoints(c)
+    outstring = f"ID: {c.ID()}\tfinal: {c.is_final()}\tlocation: {c.geometry('location')}\tdimensions: {c.geometry('dimensions')}\n"
+    out_density = f"Cell density: {cell_resources}\tgridpoint density: {gridpoints[0]['density']}\n"
+    outfile.write(outstring)
+    outfile.write(out_density)
+outfile.close()
+
 for i in range(iterations):
     cell_max_index = eng.next_cell_serial_num()
     cells = eng.get_cells()

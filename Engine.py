@@ -2,7 +2,7 @@ from numpy import inf
 from math import ceil
 from random import randint
 from statistics import mean, median
-from Helpers import MinMaxCoordinates
+from Helpers import MinMaxCoordinates, frange
 import Factories
 
 
@@ -27,9 +27,9 @@ class Engine:
 
         if len(self._cells) > 0:
             self._cells.clear()
-        for x in range(0, dims[0]+1, init_cell_size[0]):
-            for y in range(0, dims[1]+1, init_cell_size[1]):
-                for z in range(0, dims[2]+1, init_cell_size[2]):
+        for x in frange(init_cell_size[0]/2, dims[0], init_cell_size[0], 8):
+            for y in frange(init_cell_size[1]/2, dims[1], init_cell_size[1], 8):
+                for z in frange(init_cell_size[2]/2, dims[2], init_cell_size[2], 8):
                     cell = Factories.CELL(self._cell_serial_number, [x, y, z], init_cell_size, cell_properties, False)
                     self._cells.append(cell)
                     self._cell_serial_number += 1
@@ -209,9 +209,9 @@ class Engine:
 
     def _create_split_plane(self, cell_dimensions, gradient, orientation, return_format, ortho):
         """Finds greatest or smallest gradient according to orientation settings and builds a plane perpendicular to
-        gradient axis. If the cell would be split across the smallest dimension, the next greatest/smallest gradient is
-        used if both of the other cell dimensions are equal. Else, the split plane is built across the greatest
-        dimension."""
+        gradient axis. If argument ortho is true and the cell would be split across the smallest dimension, the next
+        greatest/smallest gradient is used if both of the other cell dimensions are equal. Else, the split plane is
+        built across the greatest dimension."""
 
         build_plane = lambda grad_index: list(filter(lambda axis: axis != grad_index, range(3)))
 

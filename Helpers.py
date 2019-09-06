@@ -1,3 +1,5 @@
+"""Helper functions and classes for calculations and miscellaneous tasks"""
+
 from ExtPropCalc import Calculator
 
 
@@ -26,3 +28,17 @@ class MinMaxCoordinates(Calculator):
                 max_location = location[i] + dimensions[i] / 2
                 minmax_coordinates.append([min_location, max_location])
         return minmax_coordinates
+
+def frange(start, stop, step = 1, *decimals):
+    """Implements range() generator for floats.
+    start:      lower limit
+    stop:       upper limit
+    step:       step size (if no argument is passed, default 1)
+    decimals:   round to given decimals (optional)"""
+
+    while start < stop:
+        if decimals:
+            yield round(start, decimals[0])
+        else:
+            yield start
+        start += step
