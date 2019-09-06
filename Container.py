@@ -9,12 +9,6 @@ class Container:
             self._infile = open(filename[0], 'r')
             indata = json.load(self._infile)
             self._header = indata['header']
-            #self._origin = header['origin']
-            #self._dimensions = header['dimensions']
-            #self._max_index = header['max_index']
-            #self._cell_dimensions = header['cell_dimensions']
-            #self._cell_default_properties = header['default_properties']
-            #self._min_cell_dimensions = header['min_cell_dimensions']
             self._grid = indata['body']
             self._grid_length = len(self._grid)
         else:
@@ -101,62 +95,55 @@ class Container:
 
         return data_list
 
+    def _get_header(self, key, axis = None):
+        """Returns header data with argument key. Method works in the background of all getter methods that access
+        the input data header."""
+
+        index = None
+
+        if type(axis) == str:
+            keys = {'x': 0, 'y': 1, 'z': 2}
+            index = keys[axis]
+        elif type(axis) == int:
+            index = axis
+
+        if index is not None:
+            return self._header[key][index]
+        else:
+            return self._header[key]
+
+
     def get_max_index(self, axis = None):
         """Returns the highest coordinate indices of input grid per axis.
         If no axis is given, returns all 3 indices as list"""
 
-        max_index = self._header['max_index']
-        keys = {'x': 0, 'y': 1, 'z': 2}
-        if axis:
-            return max_index[keys[axis]]
-        else:
-            return max_index
+        return self._get_header('max_index', axis)
 
     def get_min_index(self, axis = None):
         """Returns the lowest coordinate indices of input grid per axis.
         If no axis is given, returns all 3 indices as list"""
 
-        min_index = self._header['origin']
-        keys = {'x': 0, 'y': 1, 'z': 2}
-        if axis:
-            return min_index[keys[axis]]
-        else:
-            return min_index
+        return self._get_header('origin', axis)
 
     def get_structure_dims(self, axis = None):
         """Returns initial cell structure dimensions. If no axis is given, returns all 3 dimensions as list"""
 
-        dimensions = self._header['dimensions']
-        keys = {'x': 0, 'y': 1, 'z': 2}
-        if axis:
-            return dimensions[keys[axis]]
-        else: return dimensions
+        return self._get_header('dimensions', axis)
 
     def get_cell_dims(self, axis = None):
         """Returns initial cell size per axis. If no axis is given, returns all 3 dimensions as list"""
 
-        cell_dimensions = self._header['cell_dimensions']
-        keys = {'x': 0, 'y': 1, 'z': 2}
-        if axis:
-            return cell_dimensions[keys[axis]]
-        else:
-            return cell_dimensions
-
-    def get_defaults(self):
-        """Returns cell default properties"""
-
-        return self._header['default_properties']
+        return self._get_header('cell_dimensions', axis)
 
     def get_min_cell_dimensions(self, axis = None):
         """Returns minimum permittable cell dimensions. If no axis is given, returns all 3 dimensions as list"""
 
-        min_cell_dimensions = self._header['min_cell_dimensions']
-        keys = {'x': 0, 'y': 1, 'z': 2}
-        if axis:
-            return min_cell_dimensions[keys[axis]]
-        else:
-            return min_cell_dimensions
+        return self._get_header('min_cell_dimensions', axis)
 
+    def get_defaults(self):
+        """Returns cell default properties"""
+
+        return self._get_header('default_properties')
 
     def dump_data(self):
         """Returns input data as a string"""

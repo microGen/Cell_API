@@ -170,13 +170,14 @@ class Engine:
         gradient = property_gradient[0]
         orientation = property_gradient[1]
 
-        if rule_result == True:
+        if rule_result:
             # convert cell to final cell
             cell.set_final()
             return cell
         else:
-            # split cell along / across gradient
+            # split cell along / across gradient and get minimum cell size along split axis
             split_axis = self._create_split_plane(cell.properties('dimensions'), gradient, orientation, 'axis', True)
+            sa_min_cell_dim = self._data_container.get_min_cell_dimensions(split_axis)
             # get all necessary data to create sub cells
             cell_ext_data = cell.ext_properties()
             cell_loc = cell.geometry('location')
@@ -186,6 +187,10 @@ class Engine:
             new_dims = cell_dims.copy()
             new_dims[split_axis] /= 2
             offset = new_dims[split_axis] / 2
+            # if minimum cell dimension is reached, abort split operation
+            if new_dims[split_axis] <= sa_min_cell_dim:
+                cell.set_final()
+                return cell
             # calculate locations for sub cells
             new_loc_0 = cell_loc.copy()
             new_loc_0[split_axis] -= offset
