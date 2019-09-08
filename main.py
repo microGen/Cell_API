@@ -83,6 +83,7 @@ calc = ExtPropCalc.CellDensity
 calc_resources = calc.get_resources_cell()
 
 eng.evolve_cell_structure(6, rules, ['min'], [calc], False)
+eng.export_cells('final')
 
 '''
 # initial cells

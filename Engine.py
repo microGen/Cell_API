@@ -44,7 +44,8 @@ class Engine:
         return self._cells
 
     def get_cells(self, final = False, *ID):
-        """Returns list of cells if no ID is given, else returns cell of given ID"""
+        """Returns list of cells if no ID is given, else returns cell of given ID. If no cell exists with given ID,
+        returns None type"""
 
         if not final:
             cell_list = self._cells
@@ -58,8 +59,7 @@ class Engine:
             for cell in cell_list:
                 if cell.ID() == ID:
                     return cell
-                else:
-                    print('No cell of ID exists')
+            return None
 
 
     def apply_rules(self, cell, rules, prop_options, calc):
@@ -335,4 +335,34 @@ class Engine:
                 outfile.write(f"ID:\t{c.ID():4}\t/\tlocation:\t{c.geometry('location')}\t/\tdimensions:\t{c.geometry('dimensions')}\n")
             outfile.close()
 
+    def export_cells(self, type, *cell_ID):
+        """Export cells as dictionary.
+        type: argument 'proto' or 'final' returns either cells from prototype or final set
+        *cell: optional arguments return cell(s) with passed ID(s)"""
 
+        if type == 'proto':
+            final_state = False
+            cell_list = self._cells
+        else:
+            final_state = True
+            cell_list = self._cells_final
+
+        if cell_ID:
+            cell_list = [self.get_cells(final_state, cell_ID[0])]
+
+        cell_export = {}
+        for cell in cell_list:
+            cell_ID = cell.ID()
+
+
+        return cell_list
+        if not cell_ID:
+            cell_export
+            for cell in cell_list:
+                cell_IDs.append(cell.ID())
+            print('Cell IDs: ', cell_IDs)
+            return cell_list
+        else:
+            cell = self.get_cells(final_state, cell_ID[0])
+            print('Cell ID: ', cell.ID())
+            return cell

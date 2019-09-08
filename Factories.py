@@ -1,4 +1,4 @@
-from Cell import Cell, CellFinal
+from Cell import Cell
 from Container import Container
 from Engine import Engine
 

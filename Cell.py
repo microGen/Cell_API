@@ -166,13 +166,3 @@ class Cell:
     def is_final(self):
         """Returns state of cell: True if final, false if still splittable."""
         return self._final
-
-
-class CellFinal(Cell):
-    """Cell Prototype, used to build up cell structure. Finalized cells are handled by class Cell"""
-
-    def __init__(self, serial_number, location, dimensions, ext_properties):
-        super().__init__(serial_number, location, dimensions, ext_properties)
-
-    def generate_paths(self):
-        pass

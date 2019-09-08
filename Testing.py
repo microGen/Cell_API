@@ -1,7 +1,7 @@
 """Unit Tests"""
 
 #Classes
-from Cell import Cell, CellFinal
+from Cell import Cell
 import CellGeometry
 from Container import Container
 from Engine import Engine
