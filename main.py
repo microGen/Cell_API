@@ -82,6 +82,9 @@ rules = [Rulebook.Density_max]
 calc = ExtPropCalc.CellDensity
 calc_resources = calc.get_resources_cell()
 
+eng.evolve_cell_structure(6, rules, ['min'], [calc], False)
+
+'''
 # initial cells
 cells = eng.get_cells()
 outfile_name = f"cell_structure_base.txt"
@@ -98,10 +101,12 @@ for c in cells:
     outfile.write(out_density)
 outfile.close()
 
+
 # evolving cell structure
 for i in range(iterations):
     cell_max_index = eng.next_cell_serial_num()
     cells = eng.get_cells()
+    print(f'\nIteration {i}')
     for cell in cells[:cell_max_index]:
         result = eng.apply_rules(cell, rules, ['min'], [ExtPropCalc.CellDensity])
         #print('\n')
@@ -128,3 +133,26 @@ for i in range(iterations):
         outfile.write(out_density)
         #print('ID: ', c.ID(), '\tfinal: ', c.is_final(), '\tlocation: ', c.geometry('location'), '\tdimensions: ', c.geometry('dimensions'))
     outfile.close()
+
+    #for c in eng.get_cells():
+    #    print(f'Cell IDs old: {c.ID()}')
+    print('\nBefore sorting: ')
+    for c in eng.get_cells():
+        print('Cell ID: ', c.ID(), ' Final: ', c.is_final())
+    print('Finals: ')
+    for c in eng.get_cells(final = True):
+        print('Final Cell ID: ', c.ID(), ' Final: ', c.is_final())
+
+
+    eng.sort_cells()
+    print('After sorting: ')
+    for c in eng.get_cells():
+        print('Cell ID: ', c.ID(), ' Final: ', c.is_final())
+    print('Finals: ')
+    for c in eng.get_cells(final = True):
+        print('Final Cell ID: ', c.ID(), ' Final: ', c.is_final())
+
+
+    #for c in eng.get_cells():
+    #    print(f'Cell IDs new: {c.ID()}')
+'''

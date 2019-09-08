@@ -11,6 +11,7 @@ class Engine:
         self._data_container = data_container
         self._cell_serial_number = 0
         self._cells = []
+        self._cells_final = []
         self._gridpoint_ID = lambda x, y, z: str(f"{x:06}.{y:06}.{z:06}")
         pass
 
@@ -42,14 +43,19 @@ class Engine:
                     self._cell_serial_number += 1
         return self._cells
 
-    def get_cells(self, *ID):
+    def get_cells(self, final = False, *ID):
         """Returns list of cells if no ID is given, else returns cell of given ID"""
 
+        if not final:
+            cell_list = self._cells
+        else:
+            cell_list = self._cells_final
+
         if not ID:
-            return self._cells
+            return cell_list
         else:
             ID = ID[0]
-            for cell in self._cells:
+            for cell in cell_list:
                 if cell.ID() == ID:
                     return cell
                 else:
@@ -173,10 +179,12 @@ class Engine:
         if rule_result:
             # convert cell to final cell
             cell.set_final()
+            #self._cells_final.append(cell)
+            #del self._cells[cell.ID()]
             return cell
         else:
             # split cell along / across gradient and get minimum cell size along split axis
-            split_axis = self._create_split_plane(cell.properties('dimensions'), gradient, orientation, 'axis', True)
+            split_axis = self._create_split_plane(cell.properties('dimensions'), gradient, orientation, 'axis', ortho = True)
             sa_min_cell_dim = self._data_container.get_min_cell_dimensions(split_axis)
             # get all necessary data to create sub cells
             cell_ext_data = cell.ext_properties()
@@ -190,21 +198,25 @@ class Engine:
             # if minimum cell dimension is reached, abort split operation
             if new_dims[split_axis] <= sa_min_cell_dim:
                 cell.set_final()
+                #self._cells_final.append(cell)
+                #del self._cells[cell_id]
                 return cell
-            # calculate locations for sub cells
-            new_loc_0 = cell_loc.copy()
-            new_loc_0[split_axis] -= offset
-            new_loc_1 = cell_loc.copy()
-            new_loc_1[split_axis] += offset
-            # create sub cells
-            cell_n0 = Factories.CELL(cell_id, new_loc_0, new_dims, cell_ext_data, False)
-            cell_n1 = Factories.CELL(self._cell_serial_number, new_loc_1, new_dims, cell_ext_data, False)
-            self._cell_serial_number += 1
-            self._cells[cell_id] = cell_n0
-            self._cells.append(cell_n1)
-            return [cell_n0, cell_n1]
+            else:
+                # calculate locations for sub cells
+                new_loc_0 = cell_loc.copy()
+                new_loc_0[split_axis] -= offset
+                new_loc_1 = cell_loc.copy()
+                new_loc_1[split_axis] += offset
+                # create sub cells
+                cell_n0 = Factories.CELL(cell_id, new_loc_0, new_dims, cell_ext_data, False)
+                cell_n1 = Factories.CELL(self._cell_serial_number, new_loc_1, new_dims, cell_ext_data, False)
+                self._cell_serial_number += 1
+                #cell_index = self._cells.index()
+                self._cells[cell_id] = cell_n0
+                self._cells.append(cell_n1)
+                return [cell_n0, cell_n1]
 
-    def _create_split_plane(self, cell_dimensions, gradient, orientation, return_format, ortho):
+    def _create_split_plane(self, cell_dimensions, gradient, orientation, return_format, ortho = True):
         """Finds greatest or smallest gradient according to orientation settings and builds a plane perpendicular to
         gradient axis. If argument ortho is true and the cell would be split across the smallest dimension, the next
         greatest/smallest gradient is used if both of the other cell dimensions are equal. Else, the split plane is
@@ -276,3 +288,51 @@ class Engine:
             # If no orientation of split available, randomly choose an axis
             index = randint(0, 3)
         return index
+
+    def sort_cells(self):
+        """Move final cells from prototype to final list"""
+
+        self._cells_final.extend([cell for cell in self._cells if cell.is_final()])
+        self._cells = [cell for cell in self._cells if not cell.is_final()]
+
+    def evolve_cell_structure(self, iterations, rules, rule_options, calcs, finalize_remaining = True):
+        """Evolve cell structure with given settings:
+        iterations: Number of iterations the algorithm has to run through optimisation
+        rules: List of rules for optimisation
+        rule_options: Choose gridpoints with min/max/median/mean properties for rule. List of same length as rules
+        calcs: List of calculator objects needed for given rules of same length. If no calculator is needed, list
+            element must be 0
+        finalize_remaining (default: True): if after passing evolution iterations some cells are still prototypical,
+            also set their state as final and move them to final list"""
+
+        for i in range(iterations):
+            cell_max_index = self.next_cell_serial_num()
+            for cell in self._cells[:cell_max_index]:
+                rule_results = self.apply_rules(cell, rules, rule_options, calcs)
+                property_gradients = []
+                for rule in rules:
+                    property_gradients.append(self.gridpoint_gradient(cell, rule))
+                #implement feature to single out rule results
+                rule_result = rule_results[0]
+                property_gradient = property_gradients[0][0]
+                self.split_cell(cell, rule_result, property_gradient)
+            self.sort_cells()
+
+        if finalize_remaining:
+            for cell in self._cells:
+                cell.set_final()
+            self.sort_cells()
+
+        # logging and debugging
+        debug = True
+        if debug:
+            outfile = open('./debug_output/evolution_result.txt', 'w')
+            outfile.write('Prototypes:\n')
+            for c in self._cells:
+                outfile.write(f"ID:\t{c.ID():4}\t/\tlocation:\t{c.geometry('location'):}\t/\tdimensions:\t{c.geometry('dimensions')}\n")
+            outfile.write('\nFinals:\n')
+            for c in self._cells_final:
+                outfile.write(f"ID:\t{c.ID():4}\t/\tlocation:\t{c.geometry('location')}\t/\tdimensions:\t{c.geometry('dimensions')}\n")
+            outfile.close()
+
+
