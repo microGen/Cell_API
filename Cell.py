@@ -139,7 +139,7 @@ class Cell:
                 geo = []
                 for k in key:
                     geo.append(self._geometry[k])
-                return c_props
+                return geo
             else:
                 return self._geometry[key[0]]
 
@@ -166,3 +166,27 @@ class Cell:
     def is_final(self):
         """Returns state of cell: True if final, false if still splittable."""
         return self._final
+
+    def add_ext_property(self, keys, props):
+        """Adds properties to cell's ext_prop dictionary.
+        keys: key or list of keys
+        props: property or list of properties. Must be of the same length as key_list"""
+
+        if type(keys) == list:
+            num_items = len(keys)
+            for i in range(num_items):
+                self._ext_properties.update({keys[i]: props[i]})
+        else:
+            self._ext_properties.update({keys: props})
+
+    def add_ext_property(self, props):
+        """Adds properties to cell's ext_prop dictionary.
+        props: property or list of properties. Properties have to be key-value pairs, e.g. as calculated by External
+            Property Calculators"""
+
+        if type(props) == list:
+            for prop in props:
+                self._ext_properties.update(prop)
+        else:
+            self._ext_properties.update(props)
+

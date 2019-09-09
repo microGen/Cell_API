@@ -337,10 +337,10 @@ class Engine:
 
     def export_cells(self, type, *cell_ID):
         """Export cells as dictionary.
-        type: argument 'proto' or 'final' returns either cells from prototype or final set
+        type: argument 'prototype' or 'final' returns either cells from prototype or final set
         *cell: optional arguments return cell(s) with passed ID(s)"""
 
-        if type == 'proto':
+        if type == 'prototype':
             final_state = False
             cell_list = self._cells
         else:
@@ -353,16 +353,23 @@ class Engine:
         cell_export = {}
         for cell in cell_list:
             cell_ID = cell.ID()
+            cell_geometry = cell.geometry()
+            cell_properties = cell.ext_properties()
+            del cell_geometry['vertices']
+            del cell_geometry['edges']
+            del cell_geometry['faces']
+            cell_data = {cell_ID: {'geometry': cell_geometry, 'properties': cell_properties}}
+            cell_export.update(cell_data)
+        return cell_export
 
+    def extend_properties(self, calcs):
+        """Extends finalized cell properties with values from External Property Calculators.
+        calcs: list of External Property Calculators. E.g. the same as passed to <Engine>.apply_rules()"""
 
-        return cell_list
-        if not cell_ID:
-            cell_export
-            for cell in cell_list:
-                cell_IDs.append(cell.ID())
-            print('Cell IDs: ', cell_IDs)
-            return cell_list
-        else:
-            cell = self.get_cells(final_state, cell_ID[0])
-            print('Cell ID: ', cell.ID())
-            return cell
+        for cell in self._cells_final:
+            for calculator in calcs:
+                if calculator:
+                    resources = calculator.get_resources_cell()
+                    cell_properties = {r: cell.properties(r) for r in resources}
+                    calc_property = calculator.calc(cell_properties)
+                    cell.add_ext_property(calc_property)

@@ -5,6 +5,7 @@ import Rulebook
 import ExtPropCalc
 import Helpers
 from Engine import Engine
+import json
 
 debug_cell = False
 debug_json = False
@@ -83,8 +84,15 @@ calc = ExtPropCalc.CellDensity
 calc_resources = calc.get_resources_cell()
 
 eng.evolve_cell_structure(6, rules, ['min'], [calc], False)
-eng.export_cells('final')
+eng.extend_properties([calc])
+export = eng.export_cells('prototype')
 
+for key, item in export.items():
+    print(key, ':', item)
+
+export_file = open('./debug_output/Cell_export.json', 'w')
+json.dump(export, export_file, indent = 4)
+export_file.close()
 '''
 # initial cells
 cells = eng.get_cells()
