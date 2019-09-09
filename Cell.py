@@ -66,9 +66,8 @@ class Cell:
         if vertexID == ():
             return self._vertices
         else:
-            vertexID = vertexID[0]
-            if type(vertexID) == int:
-                return self._vertices[vertexID]
+            if len(vertexID) == 1:
+                return self._vertices[vertexID[0]]
             else:
                 ret_vertices = []
                 for i in vertexID:
@@ -77,12 +76,12 @@ class Cell:
 
     def edges(self, *edgeID):
         """Returns list of cell edges if no argument is given, else returns edges of given IDs."""
+
         if edgeID == ():
             return self._edges
         else:
-            edgeID = edgeID[0]
-            if type(edgeID) == int:
-                return self._edges[edgeID]
+            if len(edgeID) == 1:
+                return self._edges[edgeID[0]]
             else:
                 ret_edges = []
                 for i in edgeID:
@@ -91,12 +90,12 @@ class Cell:
 
     def faces(self, *faceID):
         """Returns list of cell faces if no argument is given, else returns faces of given IDs."""
+
         if faceID == ():
             return self._faces
         else:
-            faceID = faceID[0]
-            if type(faceID) == int:
-                return self._faces[faceID]
+            if len(faceID) == 1:
+                return self._faces[faceID[0]]
             else:
                 ret_faces = []
                 for i in faceID:

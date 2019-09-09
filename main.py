@@ -5,7 +5,7 @@ import Rulebook
 import ExtPropCalc
 import Helpers
 from Engine import Engine
-import json
+from Postprocessor import Postprocessor
 
 debug_cell = False
 debug_json = False
@@ -73,7 +73,13 @@ calc_resources = calc.get_resources_cell()
 eng.evolve_cell_structure(6, rules, ['min'], [calc], False)
 eng.extend_properties([calc])
 export = eng.export_cells('prototype')
+export_string = eng.export_json_str(export)
 
 export_file = open('./debug_output/Cell_export.json', 'w')
-json.dump(export, export_file, indent = 4)
+export_file.write(export_string)
 export_file.close()
+
+eng.test()
+
+pp = Postprocessor(eng, 0.1)
+pp.test()
