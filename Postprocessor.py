@@ -1,6 +1,6 @@
 """Postprocessor, converts cell structure to layer slices"""
 
-from Helpers import frange
+from Helpers import frange, MinMaxCoordinates
 
 class Postprocessor:
 
@@ -15,3 +15,18 @@ class Postprocessor:
     def test(self):
         print('TEST POSTPROCESSOR: Layers: ', self._layer_num, ' Z Max: ', self._z)
         print('Layers: ', self._layers)
+        for cell in self._engine.get_cells():
+            print('Cell: ', cell.ID(), cell.geometry('location'), cell.geometry('dimensions'))
+        print('\nFINALS:')
+        for cell in self._engine.get_cells(True):
+            if self._check_cell_z(cell, 0.3):
+                print('Cell: ', cell.ID(), cell.geometry('location'), cell.geometry('dimensions'))
+            else:
+                print('NOT: ', cell.ID(), cell.geometry('location'), cell.geometry('dimensions'))
+
+    def _check_cell_z(self, cell, z_slice):
+        cell_z = MinMaxCoordinates.calc(cell.geometry('location'), cell.geometry('dimensions'))[2]
+        if cell_z[0] <= z_slice <= cell_z[1]:
+            return True
+        else:
+            return False

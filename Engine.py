@@ -215,8 +215,9 @@ class Engine:
                 cell_n0 = Factories.CELL(cell_id, new_loc_0, new_dims, cell_ext_data, False)
                 cell_n1 = Factories.CELL(self._cell_serial_number, new_loc_1, new_dims, cell_ext_data, False)
                 self._cell_serial_number += 1
-                #cell_index = self._cells.index()
-                self._cells[cell_id] = cell_n0
+                old_cell_index = self._cells.index(cell)
+                self._cells[old_cell_index] = cell_n0
+                #self._cells[cell_id] = cell_n0
                 self._cells.append(cell_n1)
                 return [cell_n0, cell_n1]
 
@@ -320,10 +321,16 @@ class Engine:
                 rule_result = rule_results[0]
                 property_gradient = property_gradients[0][0]
                 self.split_cell(cell, rule_result, property_gradient)
+            for c in self._cells:
+                print('presort: ', c.ID(), c, c.is_final())
             self.sort_cells()
+            for c in self._cells:
+                print('postsort: ', c.ID(), c, c.is_final())
+            print('\n')
 
         if finalize_remaining:
             for cell in self._cells:
+                print(cell.ID())
                 cell.set_final()
             self.sort_cells()
 

@@ -70,16 +70,17 @@ rules = [Rulebook.Density_max]
 calc = ExtPropCalc.CellDensity
 calc_resources = calc.get_resources_cell()
 
+
 eng.evolve_cell_structure(6, rules, ['min'], [calc], False)
 eng.extend_properties([calc])
-export = eng.export_cells('prototype')
+export = eng.export_cells('finals')
 export_string = eng.export_json_str(export)
 
 export_file = open('./debug_output/Cell_export.json', 'w')
 export_file.write(export_string)
 export_file.close()
 
-eng.test()
+#eng.test()
 
 pp = Postprocessor(eng, 0.1)
-pp.test()
+#pp.test()
