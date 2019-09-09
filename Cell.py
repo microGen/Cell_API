@@ -1,4 +1,4 @@
-from operator import itemgetter
+#from operator import itemgetter
 from CellGeometry import Vertex, Edge, Face
 from Helpers import MinMaxCoordinates
 
@@ -56,10 +56,6 @@ class Cell:
         self._geometry.update({'volume': \
                                      self._edges[0].get_length() * self._edges[1].get_length() * self._edges[4].get_length()})
         self._geometry.update({'vertices': self.vertices, 'edges': self.edges, 'faces': self.faces})
-
-    def split(self):
-        """Returns cell properties, so that these can be transferred to sub-cells"""
-        pass
 
     def ID(self):
         """Returns the ID of the cell"""
