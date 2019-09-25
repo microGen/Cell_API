@@ -321,16 +321,10 @@ class Engine:
                 rule_result = rule_results[0]
                 property_gradient = property_gradients[0][0]
                 self.split_cell(cell, rule_result, property_gradient)
-            for c in self._cells:
-                print('presort: ', c.ID(), c, c.is_final())
             self.sort_cells()
-            for c in self._cells:
-                print('postsort: ', c.ID(), c, c.is_final())
-            print('\n')
 
         if finalize_remaining:
             for cell in self._cells:
-                print(cell.ID())
                 cell.set_final()
             self.sort_cells()
 

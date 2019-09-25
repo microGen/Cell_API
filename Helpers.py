@@ -1,5 +1,6 @@
 """Helper functions and classes for calculations and miscellaneous tasks"""
 
+from statistics import mean, median
 from ExtPropCalc import Calculator
 
 

@@ -65,13 +65,13 @@ if debug_rules:
 eng = Factories.ENGINE(cont4)
 eng.create_cell_structure()
 
-rules = [Rulebook.Density_max]
+rules = [Rulebook.Density_max, Rulebook.Shell_Dist]
 
 calc = ExtPropCalc.CellDensity
 calc_resources = calc.get_resources_cell()
 
 
-eng.evolve_cell_structure(6, rules, ['min'], [calc], False)
+eng.evolve_cell_structure(6, rules, ['min', 'amn'], [calc, 0], False)
 eng.extend_properties([calc])
 export = eng.export_cells('finals')
 export_string = eng.export_json_str(export)
@@ -83,4 +83,4 @@ export_file.close()
 #eng.test()
 
 pp = Postprocessor(eng, 0.1)
-#pp.test()
+pp.test()

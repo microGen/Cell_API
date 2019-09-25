@@ -20,13 +20,28 @@ class Postprocessor:
         print('\nFINALS:')
         for cell in self._engine.get_cells(True):
             if self._check_cell_z(cell, 0.3):
-                print('Cell: ', cell.ID(), cell.geometry('location'), cell.geometry('dimensions'))
-            else:
-                print('NOT: ', cell.ID(), cell.geometry('location'), cell.geometry('dimensions'))
+                edges = self.extract_edges(cell)
+                print('Cell @ z: ', cell.ID(), cell.geometry('location'), cell.geometry('dimensions'))
+                print('Edges: ', edges)
 
     def _check_cell_z(self, cell, z_slice):
+        """Returns True if a passed z_slice is within the z coordinates of passed Cell instance, else returns False"""
+
         cell_z = MinMaxCoordinates.calc(cell.geometry('location'), cell.geometry('dimensions'))[2]
         if cell_z[0] <= z_slice <= cell_z[1]:
             return True
         else:
             return False
+
+    def extract_edges(self, cell):
+        """Extracts 2D edges from passed Cell instance. Returns X and Y edge passing through local coordinate system
+        origin, i.e. edge 0 and 3."""
+
+        extract_xy = lambda edge: [vert[:2] for vert in edge.get_vertex_locations()]
+
+        edge_0 = cell.edges(0)
+        edge_1 = cell.edges(3)
+        edge_2D_0 = extract_xy(edge_0)
+        edge_2D_1 = extract_xy(edge_1)
+
+        return [edge_2D_0, edge_2D_1]

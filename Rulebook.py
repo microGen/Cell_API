@@ -62,9 +62,7 @@ class Density_min(Rule):
     @classmethod
     def apply(cls, grid_data, cell_data):
         """Returns true if cell density is lower than set density"""
-        grid_data = grid_data['density']
-        cell_data = cell_data['density']
-        return grid_data > cell_data
+        return grid_data['density'] > cell_data['density']
 
 
 class Density_max(Rule):
@@ -80,6 +78,20 @@ class Density_max(Rule):
     @classmethod
     def apply(cls, grid_data, cell_data):
         """Returns true if cell density is higher than set density"""
-        grid_data = grid_data['density']
-        cell_data = cell_data['density']
-        return grid_data < cell_data
+        return grid_data['density'] < cell_data['density']
+
+
+class Shell_Dist(Rule):
+    """Compares allowed minimum distance threshold stored in cell with actual distance from shell"""
+
+    grid_resources = ('shell_dist',)
+    cell_resources = ('threshold_dist',)
+    gradient_orientation = ('orthogonal',)
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def apply(cls, grid_data, cell_data):
+        """Returns true if cell distance to shell is smaller than threshold"""
+        return grid_data['shell_dist'] < cell_data['threshold_dist']
