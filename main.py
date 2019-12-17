@@ -28,7 +28,7 @@ c = Factories.CELL(3, loc, dim, {'mat_density': 0.00787, 'wall_thickness': 0.2},
 #cont1 = Factories.CONTAINER("grid_data.json")
 #cont2 = Factories.CONTAINER("grid_data_2.json")
 #cont3 = Factories.CONTAINER("grid_data_3.json")
-cont4 = Factories.CONTAINER("grid_data_4.json")
+cont4 = Factories.CONTAINER("grid_data_4b.json")
 
 print('\n\n--- EXPERIMENTAL AREA ---\n')
 
@@ -69,7 +69,6 @@ rules = [Rulebook.Density_max, Rulebook.Shell_Dist]
 
 calc = ExtPropCalc.CellDensity
 calc_resources = calc.get_resources_cell()
-
 
 eng.evolve_cell_structure(6, rules, ['min', 'amn'], False)
 eng.extend_properties([calc])
