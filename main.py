@@ -13,11 +13,11 @@ debug_rules = False
 
 print('Testing stage for Cell API\n')
 
-Testing.cell_unit_test()
+#Testing.cell_unit_test()
 #Testing.container_unit_test()
-Testing.prop_calc_unit_test()
-Testing.rulebook_unit_test()
-Testing.helpers_unit_test()
+#Testing.prop_calc_unit_test()
+#Testing.rulebook_unit_test()
+#Testing.helpers_unit_test()
 
 loc = [1, 1, 1]
 dim = [2, 2, 2]
@@ -71,7 +71,7 @@ calc = ExtPropCalc.CellDensity
 calc_resources = calc.get_resources_cell()
 
 
-eng.evolve_cell_structure(6, rules, ['min', 'amn'], [calc, 0], False)
+eng.evolve_cell_structure(6, rules, ['min', 'amn'], False)
 eng.extend_properties([calc])
 export = eng.export_cells('finals')
 export_string = eng.export_json_str(export)

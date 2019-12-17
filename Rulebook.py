@@ -17,6 +17,7 @@ Implemented properties:
 --- cell density:       ExtPropCalc.CellDensity
 """
 
+from ExtPropCalc import CellDensity
 
 class Rule:
     """Prototype Rule"""
@@ -53,7 +54,7 @@ class Density_min(Rule):
     """Tests cell against set density: Cell density target is lower than given grid point density"""
 
     grid_resources = ('density',)
-    cell_resources = ('density',)
+    cell_resources = CellDensity.get_resources_cell()
     gradient_orientation = ('orthogonal',)
 
     def __init__(self):
@@ -62,14 +63,15 @@ class Density_min(Rule):
     @classmethod
     def apply(cls, grid_data, cell_data):
         """Returns true if cell density is lower than set density"""
-        return grid_data['density'] > cell_data['density']
+        cell_data_calc = CellDensity.calc(cell_data)
+        return grid_data['density'] > cell_data_calc['density']
 
 
 class Density_max(Rule):
     """Tests cell against set density: Cell density target is higher than given grid point density"""
 
     grid_resources = ('density',)
-    cell_resources = ('density',)
+    cell_resources = CellDensity.get_resources_cell()
     gradient_orientation = ('orthogonal',)
 
     def __init__(self):
@@ -78,7 +80,8 @@ class Density_max(Rule):
     @classmethod
     def apply(cls, grid_data, cell_data):
         """Returns true if cell density is higher than set density"""
-        return grid_data['density'] < cell_data['density']
+        cell_data_calc = CellDensity.calc(cell_data)
+        return grid_data['density'] < cell_data_calc['density']
 
 
 class Shell_Dist(Rule):
