@@ -64,7 +64,7 @@ class Density_min(Rule):
     def apply(cls, grid_data, cell_data):
         """Returns true if cell density is lower than set density"""
         cell_data_calc = CellDensity.calc(cell_data)
-        return grid_data['density'] > cell_data_calc['density']
+        return grid_data['density'] >= cell_data_calc['density']
 
 
 class Density_max(Rule):
@@ -81,7 +81,7 @@ class Density_max(Rule):
     def apply(cls, grid_data, cell_data):
         """Returns true if cell density is higher than set density"""
         cell_data_calc = CellDensity.calc(cell_data)
-        return grid_data['density'] < cell_data_calc['density']
+        return grid_data['density'] <= cell_data_calc['density']
 
 
 class Shell_Dist(Rule):

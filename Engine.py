@@ -290,23 +290,37 @@ class Engine:
         self._cells_final.extend([cell for cell in self._cells if cell.is_final()])
         self._cells = [cell for cell in self._cells if not cell.is_final()]
 
-    def evolve_cell_structure(self, iterations, rules, rule_options, finalize_remaining = True):
+    def evolve_cell_structure(self, iterations, rules, rule_options, bias, finalize_remaining = True):
         """Evolve cell structure with given settings:
         iterations: Number of iterations the algorithm has to run through optimisation
         rules: List of rules for optimisation
         rule_options: Choose gridpoints with min/max/median/mean properties for rule. List of same length as rules
+        bias: low: Cell will only be split when all rules are met. High: Cell will be split when one rule is met.
         finalize_remaining (default: True): if after passing evolution iterations some cells are still prototypical,
             also set their state as final and move them to final list"""
 
         for i in range(iterations):
             cell_max_index = self.next_cell_serial_num()
             for cell in self._cells[:cell_max_index]:
+                rule_result = True
                 rule_results = self.apply_rules(cell, rules, rule_options)
                 property_gradients = []
                 for rule in rules:
                     property_gradients.append(self.gridpoint_gradient(cell, rule))
-                #implement feature to single out rule results
-                rule_result = rule_results[0]
+                # choose whether cell will be split when all or one rule is met
+                if bias.lower() == 'low':
+                    for r in rule_results:
+                        rule_result = r
+                        if rule_result:
+                            break
+                elif bias.lower() == 'high':
+                    for r in rule_results:
+                        rule_result = r
+                        if not rule_result:
+                            break
+                else:
+                    # safeguard feature
+                    rule_result = rule_results[0]
                 property_gradient = property_gradients[0][0]
                 self.split_cell(cell, rule_result, property_gradient)
             self.sort_cells()
@@ -333,7 +347,7 @@ class Engine:
         type: argument 'prototype' or 'final' returns either cells from prototype or final set
         *cell: optional arguments return cell(s) with passed ID(s)"""
 
-        if type == 'prototype' or type == 'Prototype':
+        if type.lower() == 'prototype':
             final_state = False
             cell_list = self._cells
         else:
