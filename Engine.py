@@ -333,10 +333,11 @@ class Engine:
         type: argument 'prototype' or 'final' returns either cells from prototype or final set
         *cell: optional arguments return cell(s) with passed ID(s)"""
 
-        if type == 'prototype':
+        if type == 'prototype' or type == 'Prototype':
             final_state = False
             cell_list = self._cells
         else:
+            # technically catches everything else, but this implementation is sufficient for a software prototype
             final_state = True
             cell_list = self._cells_final
 
