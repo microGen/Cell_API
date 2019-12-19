@@ -11,24 +11,24 @@ debug_cell = False
 debug_json = False
 debug_rules = False
 
-print('Testing stage for Cell API\n')
+print('Testing stage for Cell Framework\n')
 
-#Testing.cell_unit_test()
-#Testing.container_unit_test()
-#Testing.prop_calc_unit_test()
-#Testing.rulebook_unit_test()
-#Testing.helpers_unit_test()
+Testing.cell_unit_test()
+Testing.container_unit_test()
+Testing.prop_calc_unit_test()
+Testing.rulebook_unit_test()
+Testing.helpers_unit_test()
 
 loc = [1, 1, 1]
 dim = [2, 2, 2]
 iterations = 6
 
-c = Factories.CELL(3, loc, dim, {'mat_density': 0.00787, 'wall_thickness': 0.2}, False)
-#cont0 = Factories.CONTAINER("json_test_input.txt")
-#cont1 = Factories.CONTAINER("grid_data.json")
-#cont2 = Factories.CONTAINER("grid_data_2.json")
-#cont3 = Factories.CONTAINER("grid_data_3.json")
-cont4 = Factories.CONTAINER("grid_data_4b.json")
+c = Factories.cell(3, loc, dim, {'mat_density': 0.00787, 'wall_thickness': 0.2})
+#cont0 = Factories.container("json_test_input.txt")
+#cont1 = Factories.container("grid_data.json")
+#cont2 = Factories.container("grid_data_2.json")
+#cont3 = Factories.container("grid_data_3.json")
+cont4 = Factories.container("grid_data_4b.json")
 
 print('\n\n--- EXPERIMENTAL AREA ---\n')
 
@@ -62,7 +62,7 @@ if debug_rules:
     print(Rulebook.Density_min.get_prop())
     print(Rulebook.Density_min.apply(cont.get_nearest_gridpoint([-432432, -42343242, 4234324]), dens))
 
-eng = Factories.ENGINE(cont4)
+eng = Factories.engine(cont4)
 eng.create_cell_structure()
 
 rules = [Rulebook.Density_max, Rulebook.Shell_Dist]
@@ -82,4 +82,4 @@ export_file.close()
 #eng.test()
 
 pp = Postprocessor(eng, 0.1)
-pp.test()
+#pp.test()

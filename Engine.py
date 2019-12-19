@@ -39,7 +39,7 @@ class Engine:
         for x in frange(init_cell_size[0]/2, dims[0], init_cell_size[0], 8):
             for y in frange(init_cell_size[1]/2, dims[1], init_cell_size[1], 8):
                 for z in frange(init_cell_size[2]/2, dims[2], init_cell_size[2], 8):
-                    cell = Factories.CELL(self._cell_serial_number, [x, y, z], init_cell_size, cell_properties, False)
+                    cell = Factories.cell(self._cell_serial_number, [x, y, z], init_cell_size, cell_properties)
                     self._cells.append(cell)
                     self._cell_serial_number += 1
         return self._cells
@@ -202,8 +202,8 @@ class Engine:
                 new_loc_1 = cell_loc.copy()
                 new_loc_1[split_axis] += offset
                 # create sub cells
-                cell_n0 = Factories.CELL(cell_id, new_loc_0, new_dims, cell_ext_data, False)
-                cell_n1 = Factories.CELL(self._cell_serial_number, new_loc_1, new_dims, cell_ext_data, False)
+                cell_n0 = Factories.cell(cell_id, new_loc_0, new_dims, cell_ext_data)
+                cell_n1 = Factories.cell(self._cell_serial_number, new_loc_1, new_dims, cell_ext_data)
                 self._cell_serial_number += 1
                 old_cell_index = self._cells.index(cell)
                 self._cells[old_cell_index] = cell_n0
@@ -376,7 +376,7 @@ class Engine:
     def test(self):
         for cell in self._cells_final:
             bottom_top_f = cell.faces(0, 5)
-            print('CELL: ', cell)
+            print('cell: ', cell)
             for face in bottom_top_f:
                 vert_locs = face.get_vertex_locations()
                 print('FACE: ', face, ' VERTS: ', vert_locs)
