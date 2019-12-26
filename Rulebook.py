@@ -97,7 +97,7 @@ class Shell_Dist(Rule):
 
     @classmethod
     def apply(cls, grid_data, cell_data):
-        """Returns true if cell distance to shell is smaller than median cell radius"""
+        """Returns true if cell distance to shell is bigger than median cell radius"""
         dims = cell_data['dimensions']
         median_radius = median(dims) / 2
-        return grid_data['shell_dist'] < median_radius
+        return grid_data['shell_dist'] > median_radius
