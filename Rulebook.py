@@ -17,6 +17,7 @@ Implemented properties:
 --- cell density:       ExtPropCalc.CellDensity
 """
 
+from statistics import median
 from ExtPropCalc import CellDensity
 
 class Rule:
@@ -88,7 +89,7 @@ class Shell_Dist(Rule):
     """Compares allowed minimum distance threshold stored in cell with actual distance from shell"""
 
     grid_resources = ('shell_dist',)
-    cell_resources = ('threshold_dist',)
+    cell_resources = ('dimensions',)
     gradient_orientation = ('orthogonal',)
 
     def __init__(self):
@@ -96,5 +97,7 @@ class Shell_Dist(Rule):
 
     @classmethod
     def apply(cls, grid_data, cell_data):
-        """Returns true if cell distance to shell is smaller than threshold"""
-        return grid_data['shell_dist'] < cell_data['threshold_dist']
+        """Returns true if cell distance to shell is smaller than median cell radius"""
+        dims = cell_data['dimensions']
+        median_radius = median(dims) / 2
+        return grid_data['shell_dist'] < median_radius

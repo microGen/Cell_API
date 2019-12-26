@@ -20,13 +20,13 @@ print('\nAll unit tests passed. Proceeding to main program.\n\n')
 # 1: density top: max, bottom: min
 # 2: density gradient top: max, bottom: min
 # 3: density top: 50%, distance to shell bottom
-testcase = 0
+testcase = 3
 
 # general settings
 iterations = 6
 testnames = ['testfile_gen1.json', 'testfile_gen2.json', 'testfile_lim.json', 'testfile_targets.json']
 testfiles = ['./testfiles/' + t for t in testnames]
-outnames = ['out_gen1.json', 'out_gen2.json', 'out_lim.json', 'out_targtest.json']
+outnames = ['out_gen1.json', 'out_gen2.json', 'out_lim.json', 'out_targets.json']
 outfiles = ['./testfiles/' + o for o in outnames]
 
 # generate optimization settings
