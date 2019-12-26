@@ -382,11 +382,10 @@ class Engine:
 
         for cell in self._cells_final:
             for calculator in calcs:
-                if calculator:
-                    resources = calculator.get_resources_cell()
-                    cell_properties = {r: cell.properties(r) for r in resources}
-                    calc_property = calculator.calc(cell_properties)
-                    cell.add_ext_property(calc_property)
+                resources = calculator.get_resources_cell()
+                cell_properties = {r: cell.properties(r) for r in resources}
+                calc_property = calculator.calc(cell_properties)
+                cell.add_ext_property(calc_property)
 
     def test(self):
         for cell in self._cells_final:
