@@ -1,4 +1,10 @@
-"""Unit Tests"""
+"""Cell Framework
+Copyright (c) 2019 N.Wichmann
+
+Licensed under the Mozilla Public License 2.0
+(see attached License.txt or https://www.mozilla.org/en-US/MPL/2.0/)
+
+Unit Tests"""
 
 #Classes
 import Factories

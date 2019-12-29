@@ -1,8 +1,18 @@
+"""Cell Framework
+Copyright (c) 2019 N.Wichmann
+
+Licensed under the Mozilla Public License 2.0
+(see attached License.txt or https://www.mozilla.org/en-US/MPL/2.0/)
+
+Container for input files"""
+
 from random import randint
 from math import inf, sqrt
 import json
 
 class Container:
+    """Container class for optimization input files"""
+
     def __init__(self, *filename):
 
         self._infile = open(filename[0], 'r')

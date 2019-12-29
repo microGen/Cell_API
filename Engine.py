@@ -1,3 +1,11 @@
+"""Cell Framework
+Copyright (c) 2019 N.Wichmann
+
+Licensed under the Mozilla Public License 2.0
+(see attached License.txt or https://www.mozilla.org/en-US/MPL/2.0/)
+
+Engine, core organizational element of the Cell Framework"""
+
 from numpy import inf
 from json import dumps
 from math import ceil
@@ -8,6 +16,7 @@ import Factories
 
 
 class Engine:
+    """Engine class, handles data flow and optimization of infill structure"""
     def __init__(self, data_container):
         self._data_container = data_container
         self._cell_serial_number = 0

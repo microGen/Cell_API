@@ -1,4 +1,10 @@
-"""Helper functions and classes for calculations and miscellaneous tasks"""
+"""Cell Framework
+Copyright (c) 2019 N.Wichmann
+
+Licensed under the Mozilla Public License 2.0
+(see attached License.txt or https://www.mozilla.org/en-US/MPL/2.0/)
+
+Helper functions and classes for calculations and miscellaneous tasks"""
 
 from statistics import mean, median
 from ExtPropCalc import Calculator

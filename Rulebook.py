@@ -1,4 +1,9 @@
-"""
+"""Cell Framework
+Copyright (c) 2019 N.Wichmann
+
+Licensed under the Mozilla Public License 2.0
+(see attached License.txt or https://www.mozilla.org/en-US/MPL/2.0/)
+
 Rulebook, contains functionality to govern over cell splitting.
 Define classes in order to implement new features.
 Custom rules inherit from class Rule in order to implement common functionality like returning of property name.
@@ -14,8 +19,7 @@ Implemented properties:
 --- material density:   <cell>.properties('mat_density')
 --- Young's modulus:    <cell>.properties('youngs')
 --- Poisson's ratio:    <cell>.properties('poisson')
---- cell density:       ExtPropCalc.CellDensity
-"""
+--- cell density:       ExtPropCalc.CellDensity"""
 
 from statistics import median
 from ExtPropCalc import CellDensity

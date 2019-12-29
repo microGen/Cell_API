@@ -1,8 +1,12 @@
-"""
+"""Cell Framework
+Copyright (c) 2019 N.Wichmann
+
+Licensed under the Mozilla Public License 2.0
+(see attached License.txt or https://www.mozilla.org/en-US/MPL/2.0/)
+
 Functions for calculating properties like density that are not contained in cell data directly.
 Define functions here in order to implement new features.
-Works in conjunction with the rules of Rulebook.py
-"""
+Works in conjunction with the rules of Rulebook.py"""
 
 from functools import reduce
 

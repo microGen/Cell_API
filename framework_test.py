@@ -1,4 +1,12 @@
+"""Cell Framework
+Copyright (c) 2019 N.Wichmann
 
+Licensed under the Mozilla Public License 2.0
+(see attached License.txt or https://www.mozilla.org/en-US/MPL/2.0/)
+
+TEST PROGRAM FOR ADAPTABLE INFILL STRUCTURE"""
+
+import sys
 from time import time, ctime
 from datetime import timedelta
 import Factories
@@ -22,9 +30,9 @@ print('\nAll unit tests passed. Proceeding to main program.\n\n')
 # 1: density top: max, bottom: min
 # 2: density gradient top: max, bottom: min
 # 3: density top: 50%, distance to shell bottom
-testcase = 3
+testcase = int(sys.argv[1])
 # Iterations of the optimization process. WARNING: 6 iterations will take a few minutes, 12 will likely take hours.
-iterations = 6
+iterations = int(sys.argv[2])
 
 # general settings
 testnames = ['testfile_gen1.json', 'testfile_gen2.json', 'testfile_lim.json', 'testfile_targets.json']

@@ -1,10 +1,18 @@
+"""Cell Framework
+Copyright (c) 2019 N.Wichmann
+
+Licensed under the Mozilla Public License 2.0
+(see attached License.txt or https://www.mozilla.org/en-US/MPL/2.0/)
+
+Cell class, building block for infill structure"""
+
 #from operator import itemgetter
 from CellGeometry import Vertex, Edge, Face
 from Helpers import MinMaxCoordinates
 
 
 class Cell:
-    """Cell Prototype, used to build up cell structure. Finalized cells are handled by class 'CellFinal'"""
+    """Cell class, used to build up cell structure"""
 
     def __init__(self, serial_number, location, dimensions, ext_properties):
         self._ID = serial_number
