@@ -35,14 +35,14 @@ testcase = int(sys.argv[1])
 iterations = int(sys.argv[2])
 
 # general settings
-testnames = ['testfile_gen1.json', 'testfile_gen2.json', 'testfile_lim.json', 'testfile_targets.json']
+testnames = ['testfile_gen1.json', 'testfile_gen2.json', 'testfile_gen3.json','testfile_lim.json', 'testfile_targets.json']
 testfiles = ['./testfiles/' + t for t in testnames]
-outnames = ['out_gen1.json', 'out_gen2.json', 'out_lim.json', 'out_targets.json']
+outnames = ['out_gen1.json', 'out_gen2.json', 'out_gen3.json','out_lim.json', 'out_targets.json']
 outfiles = ['./testfiles/' + o for o in outnames]
 
 # generate optimization settings
-rules = [[Rulebook.Density_max],[Rulebook.Density_max],[Rulebook.Density_max],[Rulebook.Density_max, Rulebook.Shell_Dist]]
-options = [['min'], ['min'], ['med'], ['min', 'min']]
+rules = [[Rulebook.Density_max],[Rulebook.Density_max], [Rulebook.Density_max],[Rulebook.Density_max],[Rulebook.Density_max, Rulebook.Shell_Dist]]
+options = [['min'], ['min'], ['min'], ['med'], ['min', 'min']]
 
 time_start = time()
 print('Starting Cell Framework:', ctime(time_start), '\n')
