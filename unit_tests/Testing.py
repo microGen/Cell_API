@@ -7,13 +7,11 @@ Licensed under the Mozilla Public License 2.0
 Unit Tests"""
 
 #Classes
-import Factories
 import CellGeometry
-import Rulebook
-
-#Functions
 import ExtPropCalc
+import Factories
 import Helpers
+import Rulebook
 
 
 def cell_unit_test():
@@ -55,7 +53,7 @@ def container_unit_test():
     """Unit tests for all methods of container"""
 
     print('Unit test: Class Container...')
-    container_testfile = "unit_testfile.json"
+    container_testfile = "./unit_tests/unit_testfile.json"
     container_test = Factories.container(container_testfile)
     assert container_test.get_nearest_gridpoint([0, 0, 0]) == {'index': [0, 0, 0], 'location': [0, 0, 0], 'density': 1}, \
         "getting nearest data successful failed"
